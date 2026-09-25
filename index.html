@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Financial Institutions Fundamental Matrix</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* Theme Tokens */
+    :root, [data-theme="light"] {
+      --bg-base: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-surface-elevated: #f1f5f9;
+      --bg-category: #e2e8f0;
+      --border-subtle: #e2e8f0;
+      --border-focus: #0284c7;
+      
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #64748b;
+      
+      --accent-blue: #0284c7;
+      --category-label: #0369a1;
+      
+      --badge-excellent-bg: #dcfce7;
+      --badge-excellent-text: #15803d;
+      --badge-good-bg: #e0f2fe;
+      --badge-good-text: #0369a1;
+      --badge-avg-bg: #fef3c7;
+      --badge-avg-text: #b45309;
+      --badge-poor-bg: #fee2e2;
+      --badge-poor-text: #b91c1c;
+
+      --rank-gold-bg: #fef08a;
+      --rank-gold-text: #854d0e;
+
+      --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+
+    [data-theme="dark"] {
+      --bg-base: #0d1117;
+      --bg-surface: #161b22;
+      --bg-surface-elevated: #21262d;
+      --bg-category: #1a202c;
+      --border-subtle: #30363d;
+      --border-focus: #388bfd;
+      
+      --text-main: #f0f6fc;
+      --text-muted: #8b949e;
+      --text-dim: #6e7681;
+      
+      --accent-blue: #388bfd;
+      --category-label: #38bdf8;
+      
+      --badge-excellent-bg: rgba(46, 160, 67, 0.15);
+      --badge-excellent-text: #3fb950;
+      --badge-good-bg: rgba(56, 139, 253, 0.15);
+      --badge-good-text: #58a6ff;
+      --badge-avg-bg: rgba(210, 153, 34, 0.15);
+      --badge-avg-text: #d29922;
+      --badge-poor-bg: rgba(248, 81, 73, 0.15);
+      --badge-poor-text: #f85149;
+
+      --rank-gold-bg: rgba(234, 179, 8, 0.2);
+      --rank-gold-text: #facc15;
+
+      --card-shadow: none;
+    }
+
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      transition: background-color 0.15s ease, color 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 24px 32px;
+      min-height: 100vh;
+    }
+
+    /* Header & Navigation */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--accent-blue), #38bdf8);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; color: #ffffff; font-size: 16px; flex-shrink: 0;
+    }
+    .brand h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+    .brand p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    
+    .controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .ticker-input-wrap {
+      display: flex; background: var(--bg-surface);
+      border: 1px solid var(--border-subtle); border-radius: 8px; overflow: hidden;
+      box-shadow: var(--card-shadow);
+    }
+    .type-select {
+      background: var(--bg-surface-elevated); border: none; border-right: 1px solid var(--border-subtle);
+      padding: 9px 8px; font-weight: 700; font-size: 12px; color: var(--text-main); outline: none; cursor: pointer;
+    }
+    .period-input {
+      background: var(--bg-surface-elevated); border: none; border-right: 1px solid var(--border-subtle);
+      padding: 9px 10px; color: var(--text-muted); font-size: 12px; font-weight: 700; outline: none; width: 85px;
+    }
+    .ticker-input {
+      background: transparent; border: none; padding: 9px 12px;
+      color: var(--text-main); font-family: 'JetBrains Mono', monospace;
+      font-size: 13px; font-weight: 600; text-transform: uppercase; outline: none; width: 110px;
+    }
+    .btn-add {
+      background: var(--accent-blue); border: none; color: #ffffff;
+      padding: 0 14px; font-weight: 600; font-size: 13px; cursor: pointer;
+    }
+    .btn-add:hover { opacity: 0.9; }
+
+    .btn-action {
+      background: var(--bg-surface); border: 1px solid var(--border-subtle);
+      color: var(--text-muted); border-radius: 8px; padding: 9px 13px;
+      font-size: 13px; font-weight: 600; cursor: pointer; display: flex;
+      align-items: center; gap: 6px; box-shadow: var(--card-shadow);
+      white-space: nowrap;
+    }
+    .btn-action:hover { color: var(--text-main); border-color: var(--border-focus); }
+    
+    .btn-save-bank { background: #059669; color: #ffffff; border: none; }
+    .btn-save-bank:hover { opacity: 0.9; }
+    .btn-load-bank { background: #0284c7; color: #ffffff; border: none; }
+    .btn-load-bank:hover { opacity: 0.9; }
+
+    .btn-save-nbfc { background: #7c3aed; color: #ffffff; border: none; }
+    .btn-save-nbfc:hover { opacity: 0.9; }
+    .btn-load-nbfc { background: #6d28d9; color: #ffffff; border: none; }
+    .btn-load-nbfc:hover { opacity: 0.9; }
+
+    /* Responsive Matrix Table Container */
+    .table-container {
+      background: var(--bg-surface); border: 1px solid var(--border-subtle);
+      border-radius: 12px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      box-shadow: var(--card-shadow);
+    }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; }
+    th, td { padding: 12px 16px; border-bottom: 1px solid var(--border-subtle); white-space: nowrap; }
+
+    thead th {
+      background: var(--bg-surface); font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);
+      position: sticky; top: 0; z-index: 2;
+    }
+    thead th.metric-col { 
+      width: 280px; min-width: 250px; 
+      border-right: 1px solid var(--border-subtle); 
+    }
+    thead th.bank-col { 
+      min-width: 210px; text-align: center; 
+      background: var(--bg-surface-elevated); 
+      border-right: 1px solid var(--border-subtle); 
+    }
+    
+    .bank-header-wrap { display: flex; justify-content: space-between; align-items: center; padding: 2px 4px; }
+    .bank-meta { display: flex; align-items: center; gap: 8px; text-align: left; }
+    .rank-tag {
+      font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px;
+      background: var(--bg-surface); color: var(--text-muted); border: 1px solid var(--border-subtle);
+    }
+    .rank-tag.rank-first { background: var(--rank-gold-bg); color: var(--rank-gold-text); border: none; }
+    .bank-symbol { font-size: 14px; font-weight: 700; color: var(--text-main); font-family: 'JetBrains Mono', monospace; display: block; }
+    .bank-period { font-size: 10px; color: var(--text-dim); font-weight: 600; }
+    .btn-remove { background: transparent; border: none; color: var(--text-dim); font-size: 18px; cursor: pointer; line-height: 1; padding: 0 4px; }
+    .btn-remove:hover { color: var(--badge-poor-text); }
+
+    tr.category-row td {
+      background: var(--bg-category); font-size: 11px; font-weight: 800;
+      color: var(--category-label); text-transform: uppercase; letter-spacing: 0.08em;
+      padding: 9px 16px; border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);
+    }
+    td.metric-col { font-size: 13px; font-weight: 600; border-right: 1px solid var(--border-subtle); }
+    td.metric-col .metric-desc { font-size: 11px; font-weight: 400; color: var(--text-dim); margin-top: 2px; }
+
+    td.bank-col { text-align: center; border-right: 1px solid var(--border-subtle); padding: 8px 12px; }
+    .cell-value-wrap {
+      display: inline-flex; align-items: center; justify-content: space-between;
+      width: 100%; max-width: 180px; background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle); border-radius: 6px; padding: 6px 10px;
+    }
+    .cell-value { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; color: var(--text-main); }
+    .rating-pill {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.03em; padding: 2px 7px; border-radius: 4px;
+    }
+    .rating-excellent { background: var(--badge-excellent-bg); color: var(--badge-excellent-text); }
+    .rating-good { background: var(--badge-good-bg); color: var(--badge-good-text); }
+    .rating-average { background: var(--badge-avg-bg); color: var(--badge-avg-text); }
+    .rating-poor { background: var(--badge-poor-bg); color: var(--badge-poor-text); }
+
+    tr.summary-row td { background: var(--bg-surface-elevated); padding: 16px; border-bottom: 1px solid var(--border-subtle); }
+    .score-badge { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 800; color: var(--text-main); }
+    .verdict-tag {
+      display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 6px; margin-top: 4px;
+    }
+    .verdict-strong { background: var(--badge-excellent-bg); color: var(--badge-excellent-text); }
+    .verdict-moderate { background: var(--badge-avg-bg); color: var(--badge-avg-text); }
+    .verdict-weak { background: var(--badge-poor-bg); color: var(--badge-poor-text); }
+
+    /* Modal Dialog */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(3px);
+      z-index: 200; display: none; align-items: center; justify-content: center;
+      padding: 16px;
+    }
+    .modal-card {
+      background: var(--bg-surface); border: 1px solid var(--border-subtle);
+      border-radius: 12px; width: 480px; max-width: 100%;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      display: flex; flex-direction: column; max-height: 85vh;
+    }
+    .modal-header {
+      padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .modal-header h3 { font-size: 16px; font-weight: 700; }
+    .modal-actions-bar {
+      padding: 10px 20px; background: var(--bg-surface-elevated);
+      border-bottom: 1px solid var(--border-subtle); display: flex;
+      justify-content: space-between; align-items: center;
+    }
+    .btn-link {
+      background: none; border: none; color: var(--accent-blue);
+      font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 4px 6px;
+    }
+    .stock-list-container {
+      padding: 16px 20px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 10px;
+    }
+    .stock-item-row {
+      display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+      border-radius: 6px; background: var(--bg-surface-elevated); cursor: pointer;
+    }
+    .stock-item-row:hover { background: var(--bg-category); }
+    .stock-item-row input[type="checkbox"] {
+      width: 18px; height: 18px; accent-color: var(--accent-blue); cursor: pointer;
+    }
+    .stock-item-name { font-weight: 700; font-size: 13px; font-family: 'JetBrains Mono', monospace; }
+    .stock-item-period { font-size: 11px; color: var(--text-dim); margin-left: auto; }
+    .modal-footer {
+      padding: 14px 20px; border-top: 1px solid var(--border-subtle);
+      display: flex; justify-content: flex-end; gap: 10px;
+    }
+
+    /* ========================================================
+       MOBILE CHROME & TABLET OPTIMIZATIONS (<= 768px)
+       ======================================================== */
+    @media (max-width: 768px) {
+      body {
+        padding: 14px 12px;
+      }
+      header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        margin-bottom: 14px;
+        padding-bottom: 14px;
+      }
+      .brand {
+        justify-content: flex-start;
+      }
+      .controls {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+      }
+      .ticker-input-wrap {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 85px 80px 1fr auto;
+      }
+      .type-select, .period-input, .ticker-input {
+        width: 100% !important;
+        font-size: 13px;
+      }
+      .btn-add {
+        padding: 0 14px;
+        font-size: 13px;
+      }
+      .btn-action {
+        width: 100%;
+        justify-content: center;
+        padding: 11px 14px;
+        font-size: 13px;
+      }
+
+      /* Sticky Freeze for Left Metric Column on Mobile Swipe */
+      thead th.metric-col,
+      td.metric-col {
+        position: sticky;
+        left: 0;
+        z-index: 5;
+        background-color: var(--bg-surface) !important;
+        box-shadow: 2px 0 6px rgba(0, 0, 0, 0.04);
+        width: 180px;
+        min-width: 180px;
+      }
+      thead th.metric-col {
+        z-index: 10;
+      }
+      tr.category-row td {
+        position: sticky;
+        left: 0;
+        z-index: 4;
+      }
+      thead th.bank-col {
+        min-width: 175px;
+      }
+      .cell-value-wrap {
+        max-width: 100%;
+      }
+      .modal-card {
+        max-height: 90vh;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-icon">F</div>
+      <div>
+        <h1 id="appTitle">Bank Fundamental Matrix</h1>
+        <p id="appSubtitle">Score Sorted &bull; Mobile & Desktop Ready</p>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="ticker-input-wrap">
+        <select id="stockTypeSelect" class="type-select">
+          <option value="bank" selected>Bank</option>
+          <option value="nbfc">NBFC</option>
+        </select>
+        <input type="text" id="periodInput" class="period-input" placeholder="Q1 FY27" value="Q1 FY27">
+        <input type="text" id="tickerInput" class="ticker-input" placeholder="TICKER..." value="KARURVYSYA">
+        <button class="btn-add" id="btnAddTicker">+ Add</button>
+      </div>
+      
+      <!-- Explicit Bank Buttons -->
+      <button class="btn-action btn-save-bank" id="btnSaveBanks">💾 Save Banks</button>
+      <button class="btn-action btn-load-bank" id="btnLoadBanks">🏦 Load Banks</button>
+      
+      <!-- Explicit NBFC Buttons -->
+      <button class="btn-action btn-save-nbfc" id="btnSaveNBFCs">💾 Save NBFCs</button>
+      <button class="btn-action btn-load-nbfc" id="btnLoadNBFCs">🏢 Load NBFCs</button>
+      
+      <button class="btn-action" id="btnThemeToggle">🌙 Dark Mode</button>
+    </div>
+  </header>
+
+  <div class="table-container">
+    <table id="matrixTable">
+      <thead>
+        <tr id="headerRow">
+          <th class="metric-col">Metric & Definition</th>
+        </tr>
+      </thead>
+      <tbody id="matrixBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Stock Selection Modal Dialog -->
+  <div class="modal-overlay" id="stockModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle">Select Stocks from Sheet</h3>
+        <button class="btn-remove" id="btnModalClose">&times;</button>
+      </div>
+      <div class="modal-actions-bar">
+        <span id="modalCounter" style="font-size: 12px; color: var(--text-muted);">0 stocks available</span>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-link" id="btnSelectAll">Select All</button>
+          <button class="btn-link" id="btnDeselectAll">Deselect All</button>
+        </div>
+      </div>
+      <div class="stock-list-container" id="stockListContainer"></div>
+      <div class="modal-footer">
+        <button class="btn-action" id="btnModalCancel">Cancel</button>
+        <button class="btn-action btn-load-bank" id="btnModalImport">Import Selected</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxLG4FObrhidjPF9oelbbyl7_zmFpq7otPJCJl2t-6WLi05GledjpOpbsVJ4yEJBnEslg/exec";
+
+    let activeTab = "bank"; // "bank" or "nbfc"
+
+    // Isolated memory caches
+    let bankStocks = [];
+    let nbfcStocks = [];
+
+    // Theme Setup & Persistence
+    const themeBtn = document.getElementById("btnThemeToggle");
+    const currentTheme = localStorage.getItem("app_fin_theme") || "light";
+    document.documentElement.setAttribute("data-theme", currentTheme);
+    updateThemeButtonText(currentTheme);
+
+    function updateThemeButtonText(theme) {
+      themeBtn.innerHTML = theme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode";
+    }
+
+    themeBtn.addEventListener("click", () => {
+      const active = document.documentElement.getAttribute("data-theme");
+      const next = active === "light" ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("app_fin_theme", next);
+      updateThemeButtonText(next);
+    });
+
+    const BANK_METRICS = [
+      {
+        category: "Profitability & Margin",
+        items: [
+          { key: "roa", name: "ROA (%)", desc: "Return on Assets (Annualized)", cutoffs: [0.8, 1.2, 1.8], higherIsBetter: true },
+          { key: "roe", name: "ROE (%)", desc: "Return on Equity", cutoffs: [12, 15, 18], higherIsBetter: true },
+          { key: "nim", name: "NIM (%)", desc: "Net Interest Margin", cutoffs: [2.5, 3.0, 4.0], higherIsBetter: true },
+          { key: "ci",  name: "Cost to Income (%)", desc: "Operating Expense Efficiency", cutoffs: [55, 45, 40], higherIsBetter: false }
+        ]
+      },
+      {
+        category: "Asset Quality & Risk",
+        items: [
+          { key: "gnpa", name: "Gross NPA (%)", desc: "Total Stressed Advances Ratio", cutoffs: [4.0, 2.5, 1.5], higherIsBetter: false },
+          { key: "nnpa", name: "Net NPA (%)", desc: "Bad Loans After Provisions", cutoffs: [1.2, 0.6, 0.3], higherIsBetter: false },
+          { key: "pcr",  name: "PCR (%)", desc: "Provision Coverage Ratio", cutoffs: [60, 70, 80], higherIsBetter: true },
+          { key: "cc",   name: "Credit Cost (%)", desc: "Annualized Provisions / Advances", cutoffs: [1.5, 1.0, 0.5], higherIsBetter: false }
+        ]
+      },
+      {
+        category: "Growth & Capital Strength",
+        items: [
+          { key: "lg",   name: "Loan Growth (%)", desc: "Advances Expansion YoY", cutoffs: [8, 12, 18], higherIsBetter: true },
+          { key: "dg",   name: "Deposit Growth (%)", desc: "Deposits Expansion YoY", cutoffs: [8, 10, 15], higherIsBetter: true },
+          { key: "casa", name: "CASA Ratio (%)", desc: "Current & Savings Deposits", cutoffs: [25, 35, 40], higherIsBetter: true },
+          { key: "car",  name: "CRAR / CAR (%)", desc: "Total Capital Adequacy Ratio", cutoffs: [12, 15, 18], higherIsBetter: true },
+          { key: "cet1", name: "CET1 (%)", desc: "Common Equity Tier 1 Capital", cutoffs: [10, 12, 14], higherIsBetter: true }
+        ]
+      },
+      {
+        category: "Valuation & Earnings Yield",
+        items: [
+          { key: "pb", name: "P/B Ratio (x)", desc: "Price to Book Multiple", unscored: true },
+          { key: "ey", name: "Earnings Yield (%)", desc: "Implied Yield (ROE / P/B)", unscored: true }
+        ]
+      }
+    ];
+
+    const NBFC_METRICS = [
+      {
+        category: "Profitability & Margin",
+        items: [
+          { key: "roa", name: "ROA (%)", desc: "Return on Managed Assets", cutoffs: [1.5, 2.2, 3.0], higherIsBetter: true },
+          { key: "roe", name: "ROE (%)", desc: "Return on Equity", cutoffs: [12, 15, 18], higherIsBetter: true },
+          { key: "nim", name: "NIM / Spread (%)", desc: "Net Interest Margin", cutoffs: [4.0, 5.5, 7.0], higherIsBetter: true },
+          { key: "ci",  name: "Cost to Income (%)", desc: "Operating Efficiency", cutoffs: [50, 40, 30], higherIsBetter: false }
+        ]
+      },
+      {
+        category: "Asset Quality & Risk",
+        items: [
+          { key: "gs3", name: "Gross Stage 3 (%)", desc: "Stressed Loan Book", cutoffs: [4.0, 2.5, 1.5], higherIsBetter: false },
+          { key: "ns3", name: "Net Stage 3 (%)", desc: "Stage 3 after Impairment", cutoffs: [2.0, 1.2, 0.6], higherIsBetter: false },
+          { key: "pcr", name: "PCR (%)", desc: "Stage 3 Coverage Ratio", cutoffs: [50, 65, 80], higherIsBetter: true },
+          { key: "cc",  name: "Credit Cost (%)", desc: "Provisions / AUM", cutoffs: [2.0, 1.2, 0.6], higherIsBetter: false }
+        ]
+      },
+      {
+        category: "Growth & Leverage",
+        items: [
+          { key: "aum", name: "AUM Growth (%)", desc: "Loan Book Expansion YoY", cutoffs: [10, 15, 22], higherIsBetter: true },
+          { key: "de",  name: "Debt to Equity (x)", desc: "Leverage Multiplier", cutoffs: [5.5, 4.0, 3.0], higherIsBetter: false },
+          { key: "car", name: "CRAR (%)", desc: "Capital Adequacy Ratio (Min 15%)", cutoffs: [15, 18, 22], higherIsBetter: true }
+        ]
+      },
+      {
+        category: "Valuation & Earnings Yield",
+        items: [
+          { key: "pb", name: "P/B Ratio (x)", desc: "Price to Book Multiple", unscored: true },
+          { key: "ey", name: "Earnings Yield (%)", desc: "Implied Yield (ROE / P/B)", unscored: true }
+        ]
+      }
+    ];
+
+    let currentConfig = BANK_METRICS;
+
+    function setViewMode(type) {
+      activeTab = type;
+      document.getElementById("stockTypeSelect").value = type;
+      currentConfig = (type === "bank") ? BANK_METRICS : NBFC_METRICS;
+      document.getElementById("appTitle").innerText = (type === "bank") ? "Bank Fundamental Matrix" : "NBFC Fundamental Matrix";
+      document.getElementById("btnModalImport").className = (type === "bank") ? "btn-action btn-load-bank" : "btn-action btn-load-nbfc";
+      
+      document.getElementById("btnSaveBanks").style.display = (type === "bank") ? "inline-flex" : "none";
+      document.getElementById("btnLoadBanks").style.display = (type === "bank") ? "inline-flex" : "none";
+      document.getElementById("btnSaveNBFCs").style.display = (type === "nbfc") ? "inline-flex" : "none";
+      document.getElementById("btnLoadNBFCs").style.display = (type === "nbfc") ? "inline-flex" : "none";
+    }
+
+    document.getElementById("stockTypeSelect").addEventListener("change", (e) => {
+      setViewMode(e.target.value);
+      renderTable();
+    });
+
+    function calculateRating(val, cfg) {
+      if (val === undefined || val === null || val === "" || cfg.unscored) return null;
+      val = Number(val);
+      const [c1, c2, c3] = cfg.cutoffs;
+      if (cfg.higherIsBetter) {
+        if (val >= c3) return { text: "Excellent", class: "rating-excellent", score: 100 };
+        if (val >= c2) return { text: "Good", class: "rating-good", score: 75 };
+        if (val >= c1) return { text: "Average", class: "rating-average", score: 50 };
+        return { text: "Poor", class: "rating-poor", score: 0 };
+      } else {
+        if (val <= c3) return { text: "Excellent", class: "rating-excellent", score: 100 };
+        if (val <= c2) return { text: "Good", class: "rating-good", score: 75 };
+        if (val <= c1) return { text: "Average", class: "rating-average", score: 50 };
+        return { text: "Poor", class: "rating-poor", score: 0 };
+      }
+    }
+
+    function computeSummary(stock) {
+      let totalScore = 0, count = 0, poorCount = 0;
+      currentConfig.forEach(cat => {
+        cat.items.forEach(cfg => {
+          if (!cfg.unscored && stock.v[cfg.key] !== undefined && stock.v[cfg.key] !== "") {
+            const r = calculateRating(stock.v[cfg.key], cfg);
+            if (r) {
+              totalScore += r.score;
+              count++;
+              if (r.text === "Poor") poorCount++;
+            }
+          }
+        });
+      });
+      const finalScore = count ? Math.round(totalScore / count) : 0;
+      const verdict = finalScore >= 75 ? "Strong" : (finalScore >= 50 ? "Moderate" : "Weak");
+      const verdictClass = finalScore >= 75 ? "verdict-strong" : (finalScore >= 50 ? "verdict-moderate" : "verdict-weak");
+      return { finalScore, poorCount, verdict, verdictClass };
+    }
+
+    function renderTable() {
+      const displayedStocks = (activeTab === "bank") ? bankStocks : nbfcStocks;
+      const headerRow = document.getElementById("headerRow");
+      const tbody = document.getElementById("matrixBody");
+
+      if (displayedStocks.length === 0) {
+        headerRow.innerHTML = '<th class="metric-col">Metric & Definition</th><th>Status</th>';
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="2" style="text-align: center; padding: 48px 16px; color: var(--text-dim); font-size: 13px;">
+              No ${activeTab === "bank" ? "banks" : "NBFCs"} loaded. Use <strong>+ Add</strong> above to scrape a ticker or import via <strong>Load ${activeTab === "bank" ? "Banks" : "NBFCs"}</strong>.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      displayedStocks.forEach(s => { s.summary = computeSummary(s); });
+      displayedStocks.sort((a, b) => b.summary.finalScore - a.summary.finalScore);
+
+      headerRow.innerHTML = '<th class="metric-col">Metric & Definition</th>';
+      
+      displayedStocks.forEach((s, idx) => {
+        const rankClass = idx === 0 ? "rank-first" : "";
+        const rankLabel = idx === 0 ? "#1 LEADER" : `#${idx + 1}`;
+        const th = document.createElement("th");
+        th.className = "bank-col";
+        th.innerHTML = `
+          <div class="bank-header-wrap">
+            <div class="bank-meta">
+              <span class="rank-tag ${rankClass}">${rankLabel}</span>
+              <div>
+                <span class="bank-symbol">${s.name || s.symbol}</span>
+                <span class="bank-period">${s.period || ""}</span>
+              </div>
+            </div>
+            <button class="btn-remove" onclick="removeStock(${idx})">&times;</button>
+          </div>
+        `;
+        headerRow.appendChild(th);
+      });
+
+      tbody.innerHTML = "";
+
+      // Composite Rating Row
+      const scoreRow = document.createElement("tr");
+      scoreRow.className = "summary-row";
+      scoreRow.innerHTML = `<td class="metric-col"><strong>Overall Score & Verdict</strong><div class="metric-desc">Composite Financial Strength</div></td>`;
+      displayedStocks.forEach(s => {
+        scoreRow.innerHTML += `
+          <td class="bank-col">
+            <div class="score-badge">${s.summary.finalScore} / 100</div>
+            <div class="verdict-tag ${s.summary.verdictClass}">${s.summary.verdict} (${s.summary.poorCount} Poor)</div>
+          </td>
+        `;
+      });
+      tbody.appendChild(scoreRow);
+
+      // Category Metric Rows
+      currentConfig.forEach(cat => {
+        const catRow = document.createElement("tr");
+        catRow.className = "category-row";
+        catRow.innerHTML = `<td colspan="${displayedStocks.length + 1}">${cat.category}</td>`;
+        tbody.appendChild(catRow);
+
+        cat.items.forEach(cfg => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td class="metric-col">
+              ${cfg.name}
+              <div class="metric-desc">${cfg.desc}</div>
+            </td>
+          `;
+
+          displayedStocks.forEach(s => {
+            let val = s.v[cfg.key];
+            if (cfg.key === "ey" && s.v.roe && s.v.pb) {
+              val = Number((Number(s.v.roe) / Number(s.v.pb)).toFixed(1));
+            }
+
+            if (val === undefined || val === null || val === "") {
+              row.innerHTML += `<td class="bank-col"><div class="cell-value-wrap"><span class="cell-value">-</span></div></td>`;
+            } else {
+              const r = calculateRating(val, cfg);
+              const pill = r ? `<span class="rating-pill ${r.class}">${r.text}</span>` : "";
+              row.innerHTML += `
+                <td class="bank-col">
+                  <div class="cell-value-wrap">
+                    <span class="cell-value">${val}</span>
+                    ${pill}
+                  </div>
+                </td>
+              `;
+            }
+          });
+          tbody.appendChild(row);
+        });
+      });
+    }
+
+    async function addStock(symbol, period) {
+      const sym = symbol.trim().toUpperCase();
+      if (!sym) return;
+      const type = document.getElementById("stockTypeSelect").value;
+      setViewMode(type);
+
+      try {
+        const res = await fetch(`http://127.0.0.1:8000/fetch?symbol=${sym}&type=${type}`);
+        if (!res.ok) throw new Error("Fetch failed");
+        const json = await res.json();
+        
+        if (type === "bank") {
+          bankStocks = bankStocks.filter(s => (s.name || s.symbol) !== sym);
+          bankStocks.push({ name: sym, period: period || "Q1 FY27", v: json.v || {} });
+        } else {
+          nbfcStocks = nbfcStocks.filter(s => (s.name || s.symbol) !== sym);
+          nbfcStocks.push({ name: sym, period: period || "Q1 FY27", v: json.v || {} });
+        }
+        renderTable();
+      } catch (err) {
+        alert("bridge.py is unreachable. If you are browsing on mobile away from your laptop, use 'Load Banks' or 'Load NBFCs' to view cloud-saved data.");
+      }
+    }
+
+    function removeStock(index) {
+      if (activeTab === "bank") {
+        bankStocks.splice(index, 1);
+      } else {
+        nbfcStocks.splice(index, 1);
+      }
+      renderTable();
+    }
+
+    // Modal Sheet Importer
+    let fetchedSheetStocks = [];
+
+    async function openStockPicker(tabType) {
+      setViewMode(tabType);
+      document.getElementById("modalTitle").innerText = (tabType === "bank") ? "Select Banks from Sheet" : "Select NBFCs from Sheet";
+
+      try {
+        const res = await fetch(`${GOOGLE_SCRIPT_URL}?tab=${tabType}`);
+        const data = await res.json();
+        if (!Array.isArray(data) || data.length === 0) {
+          alert(`No records found in the '${tabType === "bank" ? "Banks" : "NBFCs"}' sheet tab.`);
+          return;
+        }
+
+        const map = new Map();
+        data.forEach(item => map.set(item.name, item));
+        fetchedSheetStocks = Array.from(map.values());
+
+        const listContainer = document.getElementById("stockListContainer");
+        listContainer.innerHTML = "";
+        document.getElementById("modalCounter").innerText = `${fetchedSheetStocks.length} stocks available in cloud`;
+
+        fetchedSheetStocks.forEach((item, idx) => {
+          const row = document.createElement("label");
+          row.className = "stock-item-row";
+          row.innerHTML = `
+            <input type="checkbox" class="stock-checkbox" data-idx="${idx}" checked>
+            <span class="stock-item-name">${item.name}</span>
+            <span class="stock-item-period">${item.period || ""}</span>
+          `;
+          listContainer.appendChild(row);
+        });
+
+        document.getElementById("stockModal").style.display = "flex";
+      } catch (err) {
+        alert("Failed to load from Google Sheets: " + err);
+      }
+    }
+
+    document.getElementById("btnLoadBanks").addEventListener("click", () => openStockPicker("bank"));
+    document.getElementById("btnLoadNBFCs").addEventListener("click", () => openStockPicker("nbfc"));
+
+    function closeModal() {
+      document.getElementById("stockModal").style.display = "none";
+    }
+    document.getElementById("btnModalClose").addEventListener("click", closeModal);
+    document.getElementById("btnModalCancel").addEventListener("click", closeModal);
+
+    document.getElementById("btnSelectAll").addEventListener("click", () => {
+      document.querySelectorAll(".stock-checkbox").forEach(cb => cb.checked = true);
+    });
+    document.getElementById("btnDeselectAll").addEventListener("click", () => {
+      document.querySelectorAll(".stock-checkbox").forEach(cb => cb.checked = false);
+    });
+
+    document.getElementById("btnModalImport").addEventListener("click", () => {
+      const selected = [];
+      document.querySelectorAll(".stock-checkbox:checked").forEach(cb => {
+        const idx = Number(cb.getAttribute("data-idx"));
+        selected.push(fetchedSheetStocks[idx]);
+      });
+
+      if (selected.length === 0) {
+        alert("Please select at least one stock to display.");
+        return;
+      }
+
+      if (activeTab === "bank") {
+        bankStocks = selected;
+      } else {
+        nbfcStocks = selected;
+      }
+
+      renderTable();
+      closeModal();
+    });
+
+    // Cloud Sheet Saver
+    async function saveToGoogleSheet(tabName) {
+      const currentList = (tabName === "bank") ? bankStocks : nbfcStocks;
+      if (currentList.length === 0) {
+        alert(`No ${tabName === "bank" ? "banks" : "NBFCs"} currently loaded to save.`);
+        return;
+      }
+
+      const payload = {
+        tab: tabName,
+        period: document.getElementById("periodInput").value || "Q1 FY27",
+        stocks: currentList.map(s => ({
+          name: s.name || s.symbol,
+          v: s.v
+        }))
+      };
+
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        alert(`Saved successfully to '${tabName === "bank" ? "Banks" : "NBFCs"}' tab in Google Sheets!`);
+      } catch (err) {
+        alert("Error saving to Google Sheet: " + err);
+      }
+    }
+
+    document.getElementById("btnSaveBanks").addEventListener("click", () => saveToGoogleSheet("bank"));
+    document.getElementById("btnSaveNBFCs").addEventListener("click", () => saveToGoogleSheet("nbfc"));
+
+    document.getElementById("btnAddTicker").addEventListener("click", () => {
+      const ticker = document.getElementById("tickerInput").value;
+      const period = document.getElementById("periodInput").value;
+      addStock(ticker, period);
+      document.getElementById("tickerInput").value = "";
+    });
+
+    document.getElementById("tickerInput").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        const ticker = e.target.value;
+        const period = document.getElementById("periodInput").value;
+        addStock(ticker, period);
+        e.target.value = "";
+      }
+    });
+
+    // Boot into Bank Mode
+    setViewMode("bank");
+    renderTable();
+  </script>
+</body>
+</html>
