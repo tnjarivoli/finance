@@ -3,34 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-  <title>Financial Institutions Fundamental Matrix</title>
+  <title>Sector Fundamental Checklist & Matrix</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* Theme Tokens */
     :root, [data-theme="light"] {
-      --bg-base: #f8fafc;
+      --bg-base: #f4f6f8;
       --bg-surface: #ffffff;
       --bg-surface-elevated: #f1f5f9;
       --bg-category: #e2e8f0;
-      --border-subtle: #e2e8f0;
-      --border-focus: #0284c7;
+      --border-subtle: #d5dbe3;
+      --border-focus: #2456c9;
       
-      --text-main: #0f172a;
-      --text-muted: #475569;
-      --text-dim: #64748b;
+      --text-main: #1c2430;
+      --text-muted: #5d6a7a;
+      --text-dim: #7f8b99;
       
-      --accent-blue: #0284c7;
-      --category-label: #0369a1;
+      --accent-blue: #2456c9;
+      --category-label: #1e3a8a;
       
-      --badge-excellent-bg: #dcfce7;
-      --badge-excellent-text: #15803d;
-      --badge-good-bg: #e0f2fe;
-      --badge-good-text: #0369a1;
-      --badge-avg-bg: #fef3c7;
-      --badge-avg-text: #b45309;
-      --badge-poor-bg: #fee2e2;
-      --badge-poor-text: #b91c1c;
+      --r0-bg: rgba(200, 50, 40, 0.15);
+      --r0-text: #b91c1c;
+      --r1-bg: rgba(220, 160, 0, 0.18);
+      --r1-text: #b45309;
+      --r2-bg: rgba(60, 160, 90, 0.16);
+      --r2-text: #15803d;
+      --r3-bg: rgba(30, 140, 80, 0.28);
+      --r3-text: #047857;
 
       --rank-gold-bg: #fef08a;
       --rank-gold-text: #854d0e;
@@ -39,90 +38,87 @@
     }
 
     [data-theme="dark"] {
-      --bg-base: #0d1117;
-      --bg-surface: #161b22;
-      --bg-surface-elevated: #21262d;
-      --bg-category: #1a202c;
-      --border-subtle: #30363d;
-      --border-focus: #388bfd;
+      --bg-base: #141a22;
+      --bg-surface: #1c242f;
+      --bg-surface-elevated: #232d3b;
+      --bg-category: #2a3747;
+      --border-subtle: #33404f;
+      --border-focus: #7ea4ff;
       
-      --text-main: #f0f6fc;
-      --text-muted: #8b949e;
-      --text-dim: #6e7681;
+      --text-main: #e6ebf1;
+      --text-muted: #93a0b1;
+      --text-dim: #64748b;
       
-      --accent-blue: #388bfd;
-      --category-label: #38bdf8;
+      --accent-blue: #7ea4ff;
+      --category-label: #93c5fd;
       
-      --badge-excellent-bg: rgba(46, 160, 67, 0.15);
-      --badge-excellent-text: #3fb950;
-      --badge-good-bg: rgba(56, 139, 253, 0.15);
-      --badge-good-text: #58a6ff;
-      --badge-avg-bg: rgba(210, 153, 34, 0.15);
-      --badge-avg-text: #d29922;
-      --badge-poor-bg: rgba(248, 81, 73, 0.15);
-      --badge-poor-text: #f85149;
+      --r0-bg: rgba(255, 110, 100, 0.22);
+      --r0-text: #f87171;
+      --r1-bg: rgba(230, 190, 70, 0.22);
+      --r1-text: #fbbf24;
+      --r2-bg: rgba(90, 200, 140, 0.2);
+      --r2-text: #4ade80;
+      --r3-bg: rgba(70, 200, 130, 0.35);
+      --r3-text: #34d399;
 
-      --rank-gold-bg: rgba(234, 179, 8, 0.2);
-      --rank-gold-text: #facc15;
+      --rank-gold-bg: rgba(234, 179, 8, 0.25);
+      --rank-gold-text: #fde047;
 
       --card-shadow: none;
     }
 
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-      transition: background-color 0.15s ease, color 0.15s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color 0.15s ease, color 0.15s ease; -webkit-tap-highlight-color: transparent; }
     body {
       background-color: var(--bg-base);
       color: var(--text-main);
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      padding: 24px 32px;
+      padding: 20px 24px;
       min-height: 100vh;
     }
 
-    /* Header & Navigation */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 16px;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
       border-bottom: 1px solid var(--border-subtle);
       flex-wrap: wrap;
-      gap: 14px;
+      gap: 12px;
     }
-    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand { display: flex; align-items: center; gap: 10px; }
     .brand-icon {
-      width: 36px; height: 36px;
+      width: 34px; height: 34px;
       background: linear-gradient(135deg, var(--accent-blue), #38bdf8);
       border-radius: 8px; display: flex; align-items: center; justify-content: center;
       font-weight: 800; color: #ffffff; font-size: 16px; flex-shrink: 0;
     }
-    .brand h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+    .brand h1 { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; }
     .brand p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-    
-    .controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+    /* Sector Navigation Bar */
+    .sector-nav { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; align-items: center; }
+    .btn-tab {
+      background: var(--bg-surface); border: 1px solid var(--border-subtle);
+      color: var(--text-main); padding: 7px 14px; border-radius: 6px;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+    }
+    .btn-tab.active { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
+
+    .controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
     .ticker-input-wrap {
       display: flex; background: var(--bg-surface);
-      border: 1px solid var(--border-subtle); border-radius: 8px; overflow: hidden;
+      border: 1px solid var(--border-subtle); border-radius: 6px; overflow: hidden;
       box-shadow: var(--card-shadow);
-    }
-    .type-select {
-      background: var(--bg-surface-elevated); border: none; border-right: 1px solid var(--border-subtle);
-      padding: 9px 8px; font-weight: 700; font-size: 12px; color: var(--text-main); outline: none; cursor: pointer;
     }
     .period-input {
       background: var(--bg-surface-elevated); border: none; border-right: 1px solid var(--border-subtle);
-      padding: 9px 10px; color: var(--text-muted); font-size: 12px; font-weight: 700; outline: none; width: 85px;
+      padding: 8px 10px; color: var(--text-muted); font-size: 12px; font-weight: 700; outline: none; width: 85px;
     }
     .ticker-input {
-      background: transparent; border: none; padding: 9px 12px;
+      background: transparent; border: none; padding: 8px 12px;
       color: var(--text-main); font-family: 'JetBrains Mono', monospace;
-      font-size: 13px; font-weight: 600; text-transform: uppercase; outline: none; width: 110px;
+      font-size: 13px; font-weight: 600; text-transform: uppercase; outline: none; width: 120px;
     }
     .btn-add {
       background: var(--accent-blue); border: none; color: #ffffff;
@@ -132,94 +128,86 @@
 
     .btn-action {
       background: var(--bg-surface); border: 1px solid var(--border-subtle);
-      color: var(--text-muted); border-radius: 8px; padding: 9px 13px;
+      color: var(--text-main); border-radius: 6px; padding: 8px 12px;
       font-size: 13px; font-weight: 600; cursor: pointer; display: flex;
       align-items: center; gap: 6px; box-shadow: var(--card-shadow);
-      white-space: nowrap;
     }
-    .btn-action:hover { color: var(--text-main); border-color: var(--border-focus); }
-    
-    .btn-save-bank { background: #059669; color: #ffffff; border: none; }
-    .btn-save-bank:hover { opacity: 0.9; }
-    .btn-load-bank { background: #0284c7; color: #ffffff; border: none; }
-    .btn-load-bank:hover { opacity: 0.9; }
+    .btn-action:hover { border-color: var(--border-focus); }
+    .btn-save-cloud { background: #059669; color: #ffffff; border: none; }
+    .btn-save-cloud:hover { opacity: 0.9; }
+    .btn-load-cloud { background: #0284c7; color: #ffffff; border: none; }
+    .btn-load-cloud:hover { opacity: 0.9; }
 
-    .btn-save-nbfc { background: #7c3aed; color: #ffffff; border: none; }
-    .btn-save-nbfc:hover { opacity: 0.9; }
-    .btn-load-nbfc { background: #6d28d9; color: #ffffff; border: none; }
-    .btn-load-nbfc:hover { opacity: 0.9; }
-
-    /* Responsive Matrix Table Container */
+    /* Table & Matrix Layout */
     .table-container {
       background: var(--bg-surface); border: 1px solid var(--border-subtle);
-      border-radius: 12px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      border-radius: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch;
       box-shadow: var(--card-shadow);
     }
     table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; }
-    th, td { padding: 12px 16px; border-bottom: 1px solid var(--border-subtle); white-space: nowrap; }
+    th, td { padding: 9px 14px; border-bottom: 1px solid var(--border-subtle); white-space: nowrap; }
 
     thead th {
       background: var(--bg-surface); font-size: 11px; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);
       position: sticky; top: 0; z-index: 2;
     }
-    thead th.metric-col { 
-      width: 280px; min-width: 250px; 
-      border-right: 1px solid var(--border-subtle); 
-    }
-    thead th.bank-col { 
-      min-width: 210px; text-align: center; 
-      background: var(--bg-surface-elevated); 
-      border-right: 1px solid var(--border-subtle); 
-    }
+    thead th.metric-col { width: 270px; min-width: 250px; border-right: 1px solid var(--border-subtle); }
+    thead th.stock-col { min-width: 190px; text-align: center; background: var(--bg-surface-elevated); border-right: 1px solid var(--border-subtle); }
     
-    .bank-header-wrap { display: flex; justify-content: space-between; align-items: center; padding: 2px 4px; }
-    .bank-meta { display: flex; align-items: center; gap: 8px; text-align: left; }
+    .stock-header-wrap { display: flex; justify-content: space-between; align-items: center; padding: 2px; }
+    .stock-meta { display: flex; align-items: center; gap: 8px; text-align: left; }
     .rank-tag {
       font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px;
       background: var(--bg-surface); color: var(--text-muted); border: 1px solid var(--border-subtle);
     }
     .rank-tag.rank-first { background: var(--rank-gold-bg); color: var(--rank-gold-text); border: none; }
-    .bank-symbol { font-size: 14px; font-weight: 700; color: var(--text-main); font-family: 'JetBrains Mono', monospace; display: block; }
-    .bank-period { font-size: 10px; color: var(--text-dim); font-weight: 600; }
-    .btn-remove { background: transparent; border: none; color: var(--text-dim); font-size: 18px; cursor: pointer; line-height: 1; padding: 0 4px; }
-    .btn-remove:hover { color: var(--badge-poor-text); }
+    .stock-symbol { font-size: 13px; font-weight: 700; color: var(--text-main); font-family: 'JetBrains Mono', monospace; }
+    .stock-period { font-size: 10px; color: var(--text-dim); font-weight: 600; display: block; }
+    .btn-remove { background: transparent; border: none; color: var(--text-dim); font-size: 18px; cursor: pointer; padding: 0 4px; }
+    .btn-remove:hover { color: #ef4444; }
 
     tr.category-row td {
       background: var(--bg-category); font-size: 11px; font-weight: 800;
-      color: var(--category-label); text-transform: uppercase; letter-spacing: 0.08em;
-      padding: 9px 16px; border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);
+      color: var(--category-label); text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 7px 14px; border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);
     }
-    td.metric-col { font-size: 13px; font-weight: 600; border-right: 1px solid var(--border-subtle); }
-    td.metric-col .metric-desc { font-size: 11px; font-weight: 400; color: var(--text-dim); margin-top: 2px; }
+    td.metric-col { font-size: 12px; font-weight: 600; border-right: 1px solid var(--border-subtle); }
+    td.metric-col .metric-desc { font-size: 11px; font-weight: 400; color: var(--text-dim); margin-top: 1px; white-space: normal; max-width: 250px; }
 
-    td.bank-col { text-align: center; border-right: 1px solid var(--border-subtle); padding: 8px 12px; }
+    td.stock-col { text-align: center; border-right: 1px solid var(--border-subtle); padding: 6px 10px; }
     .cell-value-wrap {
       display: inline-flex; align-items: center; justify-content: space-between;
-      width: 100%; max-width: 180px; background: var(--bg-surface-elevated);
-      border: 1px solid var(--border-subtle); border-radius: 6px; padding: 6px 10px;
+      width: 100%; max-width: 175px; background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle); border-radius: 5px; padding: 5px 8px;
     }
-    .cell-value { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; color: var(--text-main); }
-    .rating-pill {
-      font-size: 10px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.03em; padding: 2px 7px; border-radius: 4px;
+    .cell-value { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: var(--text-main); }
+    
+    /* 4-Level Checklist Rating Badges */
+    .badge-r {
+      font-size: 9px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.03em; padding: 2px 6px; border-radius: 4px;
     }
-    .rating-excellent { background: var(--badge-excellent-bg); color: var(--badge-excellent-text); }
-    .rating-good { background: var(--badge-good-bg); color: var(--badge-good-text); }
-    .rating-average { background: var(--badge-avg-bg); color: var(--badge-avg-text); }
-    .rating-poor { background: var(--badge-poor-bg); color: var(--badge-poor-text); }
+    .r0 { background: var(--r0-bg); color: var(--r0-text); }
+    .r1 { background: var(--r1-bg); color: var(--r1-text); }
+    .r2 { background: var(--r2-bg); color: var(--r2-text); }
+    .r3 { background: var(--r3-bg); color: var(--r3-text); }
 
-    tr.summary-row td { background: var(--bg-surface-elevated); padding: 16px; border-bottom: 1px solid var(--border-subtle); }
-    .score-badge { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 800; color: var(--text-main); }
+    tr.summary-row td { background: var(--bg-surface-elevated); padding: 12px 14px; border-bottom: 1px solid var(--border-subtle); }
+    .score-badge { font-family: 'JetBrains Mono', monospace; font-size: 17px; font-weight: 800; }
     .verdict-tag {
       display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase;
-      padding: 4px 10px; border-radius: 6px; margin-top: 4px;
+      padding: 3px 8px; border-radius: 5px; margin-top: 3px;
     }
-    .verdict-strong { background: var(--badge-excellent-bg); color: var(--badge-excellent-text); }
-    .verdict-moderate { background: var(--badge-avg-bg); color: var(--badge-avg-text); }
-    .verdict-weak { background: var(--badge-poor-bg); color: var(--badge-poor-text); }
+    .vd-strong { background: var(--r3-bg); color: var(--r3-text); }
+    .vd-decent { background: var(--r2-bg); color: var(--r2-text); }
+    .vd-mixed { background: var(--r1-bg); color: var(--r1-text); }
+    .vd-weak { background: var(--r0-bg); color: var(--r0-text); }
+    .vd-fill { background: var(--bg-category); color: var(--text-muted); }
 
-    /* Modal Dialog */
+    .foot-text { margin-top: 14px; color: var(--text-muted); font-size: 12px; line-height: 1.5; max-width: 90ch; }
+
+    /* Modal Sheet Picker */
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(3px);
@@ -228,112 +216,59 @@
     }
     .modal-card {
       background: var(--bg-surface); border: 1px solid var(--border-subtle);
-      border-radius: 12px; width: 480px; max-width: 100%;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      border-radius: 10px; width: 480px; max-width: 100%;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.15);
       display: flex; flex-direction: column; max-height: 85vh;
     }
     .modal-header {
-      padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);
+      padding: 14px 18px; border-bottom: 1px solid var(--border-subtle);
       display: flex; justify-content: space-between; align-items: center;
     }
-    .modal-header h3 { font-size: 16px; font-weight: 700; }
+    .modal-header h3 { font-size: 15px; font-weight: 700; }
     .modal-actions-bar {
-      padding: 10px 20px; background: var(--bg-surface-elevated);
+      padding: 8px 18px; background: var(--bg-surface-elevated);
       border-bottom: 1px solid var(--border-subtle); display: flex;
       justify-content: space-between; align-items: center;
     }
     .btn-link {
       background: none; border: none; color: var(--accent-blue);
-      font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 4px 6px;
+      font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: underline;
     }
     .stock-list-container {
-      padding: 16px 20px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 10px;
+      padding: 14px 18px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px;
     }
     .stock-item-row {
-      display: flex; align-items: center; gap: 12px; padding: 10px 12px;
-      border-radius: 6px; background: var(--bg-surface-elevated); cursor: pointer;
+      display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+      border-radius: 5px; background: var(--bg-surface-elevated); cursor: pointer;
     }
     .stock-item-row:hover { background: var(--bg-category); }
-    .stock-item-row input[type="checkbox"] {
-      width: 18px; height: 18px; accent-color: var(--accent-blue); cursor: pointer;
-    }
-    .stock-item-name { font-weight: 700; font-size: 13px; font-family: 'JetBrains Mono', monospace; }
-    .stock-item-period { font-size: 11px; color: var(--text-dim); margin-left: auto; }
+    .stock-item-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--accent-blue); }
     .modal-footer {
-      padding: 14px 20px; border-top: 1px solid var(--border-subtle);
-      display: flex; justify-content: flex-end; gap: 10px;
+      padding: 12px 18px; border-top: 1px solid var(--border-subtle);
+      display: flex; justify-content: flex-end; gap: 8px;
     }
 
-    /* ========================================================
-       MOBILE CHROME & TABLET OPTIMIZATIONS (<= 768px)
-       ======================================================== */
+    /* Mobile Responsive Optimizations */
     @media (max-width: 768px) {
-      body {
-        padding: 14px 12px;
-      }
-      header {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 12px;
-        margin-bottom: 14px;
-        padding-bottom: 14px;
-      }
-      .brand {
-        justify-content: flex-start;
-      }
-      .controls {
-        flex-direction: column;
-        width: 100%;
-        gap: 10px;
-      }
-      .ticker-input-wrap {
-        width: 100%;
-        display: grid;
-        grid-template-columns: 85px 80px 1fr auto;
-      }
-      .type-select, .period-input, .ticker-input {
-        width: 100% !important;
-        font-size: 13px;
-      }
-      .btn-add {
-        padding: 0 14px;
-        font-size: 13px;
-      }
-      .btn-action {
-        width: 100%;
-        justify-content: center;
-        padding: 11px 14px;
-        font-size: 13px;
-      }
+      body { padding: 12px 10px; }
+      header { flex-direction: column; align-items: stretch; gap: 10px; }
+      .sector-nav { overflow-x: auto; padding-bottom: 4px; }
+      .controls { flex-direction: column; width: 100%; gap: 8px; }
+      .ticker-input-wrap { width: 100%; display: grid; grid-template-columns: 80px 1fr auto; }
+      .period-input, .ticker-input { width: 100% !important; }
+      .btn-action { width: 100%; justify-content: center; }
 
-      /* Sticky Freeze for Left Metric Column on Mobile Swipe */
-      thead th.metric-col,
-      td.metric-col {
-        position: sticky;
-        left: 0;
-        z-index: 5;
+      /* Sticky Freeze for Left Metric Column */
+      thead th.metric-col, td.metric-col {
+        position: sticky; left: 0; z-index: 5;
         background-color: var(--bg-surface) !important;
-        box-shadow: 2px 0 6px rgba(0, 0, 0, 0.04);
-        width: 180px;
-        min-width: 180px;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.04);
+        width: 170px; min-width: 170px;
       }
-      thead th.metric-col {
-        z-index: 10;
-      }
-      tr.category-row td {
-        position: sticky;
-        left: 0;
-        z-index: 4;
-      }
-      thead th.bank-col {
-        min-width: 175px;
-      }
-      .cell-value-wrap {
-        max-width: 100%;
-      }
-      .modal-card {
-        max-height: 90vh;
-      }
+      thead th.metric-col { z-index: 10; }
+      tr.category-row td { position: sticky; left: 0; z-index: 4; }
+      thead th.stock-col { min-width: 170px; }
+      .cell-value-wrap { max-width: 100%; }
     }
   </style>
 </head>
@@ -343,32 +278,33 @@
     <div class="brand">
       <div class="brand-icon">F</div>
       <div>
-        <h1 id="appTitle">Bank Fundamental Matrix</h1>
-        <p id="appSubtitle">Score Sorted &bull; Mobile & Desktop Ready</p>
+        <h1 id="appTitle">Sector Fundamental Matrix</h1>
+        <p id="appSubtitle">Checklist Scored &bull; Mobile & Desktop Ready</p>
       </div>
     </div>
-    <div class="controls">
-      <div class="ticker-input-wrap">
-        <select id="stockTypeSelect" class="type-select">
-          <option value="bank" selected>Bank</option>
-          <option value="nbfc">NBFC</option>
-        </select>
-        <input type="text" id="periodInput" class="period-input" placeholder="Q1 FY27" value="Q1 FY27">
-        <input type="text" id="tickerInput" class="ticker-input" placeholder="TICKER..." value="KARURVYSYA">
-        <button class="btn-add" id="btnAddTicker">+ Add</button>
-      </div>
-      
-      <!-- Explicit Bank Buttons -->
-      <button class="btn-action btn-save-bank" id="btnSaveBanks">💾 Save Banks</button>
-      <button class="btn-action btn-load-bank" id="btnLoadBanks">🏦 Load Banks</button>
-      
-      <!-- Explicit NBFC Buttons -->
-      <button class="btn-action btn-save-nbfc" id="btnSaveNBFCs">💾 Save NBFCs</button>
-      <button class="btn-action btn-load-nbfc" id="btnLoadNBFCs">🏢 Load NBFCs</button>
-      
-      <button class="btn-action" id="btnThemeToggle">🌙 Dark Mode</button>
-    </div>
+    <button class="btn-action" id="btnThemeToggle">🌙 Dark Mode</button>
   </header>
+
+  <!-- 5 Sector Navigation Tabs -->
+  <div class="sector-nav" id="sectorNav">
+    <button class="btn-tab active" data-tab="bank">Banks</button>
+    <button class="btn-tab" data-tab="nbfc">NBFCs</button>
+    <button class="btn-tab" data-tab="auto">Auto</button>
+    <button class="btn-tab" data-tab="pharma">Pharma</button>
+    <button class="btn-tab" data-tab="capgoods">Capital Goods</button>
+  </div>
+
+  <div class="controls">
+    <div class="ticker-input-wrap">
+      <input type="text" id="periodInput" class="period-input" placeholder="Q1 FY27" value="Q1 FY27">
+      <!-- UPDATED: Clean input field -->
+	  <input type="text" id="tickerInput" class="ticker-input" placeholder="TICKER...">
+      <button class="btn-add" id="btnAddTicker">+ Scrape & Add</button>
+    </div>
+    <button class="btn-action btn-save-cloud" id="btnSaveCloud">💾 Save to Sheet</button>
+    <button class="btn-action btn-load-cloud" id="btnLoadCloud">📂 Load from Sheet</button>
+    <button class="btn-action" id="btnClearCurrent">🗑 Clear Table</button>
+  </div>
 
   <div class="table-container">
     <table id="matrixTable">
@@ -381,11 +317,13 @@
     </table>
   </div>
 
-  <!-- Stock Selection Modal Dialog -->
+  <p class="foot-text" id="sectorFootnote"></p>
+
+  <!-- Modal Stock Selector -->
   <div class="modal-overlay" id="stockModal">
     <div class="modal-card">
       <div class="modal-header">
-        <h3 id="modalTitle">Select Stocks from Sheet</h3>
+        <h3 id="modalTitle">Select Stocks from Cloud Sheet</h3>
         <button class="btn-remove" id="btnModalClose">&times;</button>
       </div>
       <div class="modal-actions-bar">
@@ -398,7 +336,7 @@
       <div class="stock-list-container" id="stockListContainer"></div>
       <div class="modal-footer">
         <button class="btn-action" id="btnModalCancel">Cancel</button>
-        <button class="btn-action btn-load-bank" id="btnModalImport">Import Selected</button>
+        <button class="btn-action btn-load-cloud" id="btnModalImport">Import Selected</button>
       </div>
     </div>
   </div>
@@ -406,195 +344,238 @@
   <script>
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxLG4FObrhidjPF9oelbbyl7_zmFpq7otPJCJl2t-6WLi05GledjpOpbsVJ4yEJBnEslg/exec";
 
-    let activeTab = "bank"; // "bank" or "nbfc"
+    const RATING_NAMES = ["Poor", "Average", "Good", "Excellent"];
+    const RATING_CLASSES = ["r0", "r1", "r2", "r3"];
 
-    // Isolated memory caches
-    let bankStocks = [];
-    let nbfcStocks = [];
+    // Reference Checklist Definitions & Thresholds
+    const SECTORS = {
+      bank: {
+        title: "Bank Fundamental Matrix",
+        sheetTab: "bank",
+        val: "pb",
+        valName: "P/B Ratio (x)",
+        valDesc: "Judge it against ROE, not on its own",
+        m: [
+          { k: "roa", n: "ROA (%)", d: "u", c: [0.8, 1.2, 1.8], desc: "Profit earned on total assets" },
+          { k: "roe", n: "ROE (%)", d: "u", c: [12, 15, 18], desc: "Return to shareholders" },
+          { k: "gnpa", n: "Gross NPA (%)", d: "d", c: [4, 2.5, 1.5], desc: "Loans gone bad; lower is better" },
+          { k: "nnpa", n: "Net NPA (%)", d: "d", c: [1.2, 0.6, 0.3], desc: "Bad loans after provisions" },
+          { k: "cc", n: "Credit Cost (%)", d: "d", c: [1.5, 1, 0.5], desc: "Annual provisions as % of loans" },
+          { k: "lg", n: "Loan Growth (%)", d: "u", c: [8, 12, 18], desc: "Compare with system growth" },
+          { k: "dg", n: "Deposit Growth (%)", d: "u", c: [8, 10, 15], desc: "Ability to attract deposits" },
+          { k: "casa", n: "CASA Ratio (%)", d: "u", c: [25, 35, 40], desc: "Lower funding cost" },
+          { k: "nim", n: "NIM (%)", d: "u", c: [2.5, 3, 4], desc: "Core lending margin" },
+          { k: "pcr", n: "PCR (%)", d: "u", c: [60, 70, 80], desc: "Cushion against bad loans" },
+          { k: "car", n: "Capital Adequacy CRAR (%)", d: "u", c: [12, 15, 18], desc: "Financial strength" },
+          { k: "cet1", n: "CET1 (%)", d: "u", c: [10, 12, 14], desc: "Core capital" },
+          { k: "ci", n: "Cost-to-Income (%)", d: "d", c: [55, 45, 40], desc: "Operating efficiency" }
+        ],
+        foot: "Compare banks of the same peer group (PSU vs Private). Compare loan and deposit growth with RBI system growth."
+      },
+      nbfc: {
+        title: "NBFC Fundamental Matrix",
+        sheetTab: "nbfc",
+        val: "pb",
+        valName: "P/B Ratio (x)",
+        valDesc: "Judge it against ROE, not on its own",
+        m: [
+          { k: "roa", n: "ROA (%)", d: "u", c: [1.5, 2.5, 3.5], desc: "Profit earned on total assets" },
+          { k: "roe", n: "ROE (%)", d: "u", c: [10, 14, 18], desc: "Return to shareholders" },
+          { k: "gs3", n: "Gross Stage 3 (%)", d: "d", c: [5, 3, 1.5], desc: "Loans gone bad; lower is better" },
+          { k: "ns3", n: "Net Stage 3 (%)", d: "d", c: [2, 1, 0.5], desc: "Bad loans after provisions" },
+          { k: "pcr", n: "Stage 3 Coverage PCR (%)", d: "u", c: [35, 50, 65], desc: "Cushion against bad loans" },
+          { k: "cc", n: "Credit Cost (%)", d: "d", c: [2.5, 1.5, 0.75], desc: "Annual provisions as % of loans" },
+          { k: "aum", n: "AUM Growth (%)", d: "u", c: [12, 18, 25], desc: "Growth in lending business" },
+          { k: "nim", n: "NIM / Spread (%)", d: "u", c: [3, 5, 8], desc: "Varies significantly by asset segment" },
+          { k: "ci", n: "Cost-to-Income (%)", d: "d", c: [50, 40, 30], desc: "Operating efficiency" },
+          { k: "car", n: "CRAR (%)", d: "u", c: [17, 20, 25], desc: "Capital cushion against shocks" },
+          { k: "de", n: "Debt to Equity (x)", d: "d", c: [6, 4.5, 3], desc: "Leverage; lower is safer" }
+        ],
+        foot: "NBFC cutoffs differ by segment (housing, vehicle, gold, microfinance). Judge NIM and leverage against identical segments."
+      },
+      auto: {
+        title: "Auto & Ancillaries Matrix",
+        sheetTab: "auto",
+        val: "pe",
+        valName: "P/E Ratio (x)",
+        valDesc: "Compare against stock's own history and industry cyclicality",
+        m: [
+          { k: "roce", n: "ROCE (%)", d: "u", c: [10, 15, 20], desc: "Return on capital employed" },
+          { k: "ebitda", n: "EBITDA Margin (%)", d: "u", c: [8, 11, 14], desc: "Operating profitability; swings with operating leverage" },
+          { k: "revg", n: "Revenue Growth (%)", d: "u", c: [5, 10, 15], desc: "YoY top-line expansion" },
+          { k: "volg", n: "Volume Growth (%)", d: "u", c: [0, 5, 10], desc: "YoY unit sales vs SIAM industry benchmark" },
+          { k: "rm", n: "RM Cost (% of Sales)", d: "d", c: [70, 65, 60], desc: "Raw material cost; lower is better" },
+          { k: "nde", n: "Net Debt / EBITDA (x)", d: "d", c: [2, 1, 0.5], desc: "Leverage; lower is safer; top OEMs are net cash" },
+          { k: "wcd", n: "Working Capital Days", d: "d", c: [60, 40, 20], desc: "Cash conversion cycle; lower is better" },
+          { k: "disc", n: "Discount (% of ASP)", d: "d", c: [5, 3, 1.5], desc: "Dealer discounting; rising discounts signal demand fatigue" },
+          { k: "evmix", n: "EV Mix (%)", d: "u", c: [2, 5, 10], desc: "Share of electric vehicles in total volumes" }
+        ],
+        flags: [
+          { k: "mktsh", n: "Market Share Trend", d: "Gaining / stable / losing share in key product lines" },
+          { k: "launch", n: "New Launch Pipeline", d: "Upcoming model refresh and expected volume traction" },
+          { k: "export", n: "Export Exposure", d: "Geographic diversification and FX exposure" }
+        ],
+        foot: "Compare OEMs against same-segment peers (2W / PV / CV / Tractors). Monitor monthly SIAM dispatch figures."
+      },
+      pharma: {
+        title: "Pharmaceuticals Matrix",
+        sheetTab: "pharma",
+        val: "pe",
+        valName: "P/E Ratio (x)",
+        valDesc: "Compare against stock's own history and pipeline visibility",
+        m: [
+          { k: "roe", n: "ROE (%)", d: "u", c: [12, 16, 20], desc: "Return to shareholders" },
+          { k: "ebitda", n: "EBITDA Margin (%)", d: "u", c: [15, 20, 25], desc: "Core operating profitability" },
+          { k: "gm", n: "Gross Margin (%)", d: "u", c: [55, 60, 65], desc: "First hit by price erosion or RM API cost swings" },
+          { k: "revg", n: "Revenue Growth (%)", d: "u", c: [5, 10, 15], desc: "YoY top-line growth" },
+          { k: "rnd", n: "R&D Spend (% of Sales)", d: "u", c: [3, 5, 8], desc: "Judge alongside actual ANDA approvals, not spend alone" },
+          { k: "nde", n: "Net Debt / EBITDA (x)", d: "d", c: [2, 1, 0.3], desc: "Leverage; lower is safer" },
+          { k: "wcd", n: "Working Capital Days", d: "d", c: [120, 90, 60], desc: "Lower is better; pharma supply chains require cushion" },
+          { k: "perosion", n: "US Price Erosion (%)", d: "d", c: [10, 5, 2], desc: "US generic business price deflation" }
+        ],
+        flags: [
+          { k: "fda", n: "USFDA Plant Status", d: "Warning Letter / Import Alert / OAI / VAI / EIR Clear" },
+          { k: "litig", n: "Litigation & One-Offs", d: "Antitrust settlements or one-time milestone royalties" },
+          { k: "anda", n: "ANDA / Pipeline", d: "Filed, pending, tentative approvals and Para IV filings" }
+        ],
+        foot: "Check facility-wise USFDA inspection status before relying solely on score. Separate base earnings from one-off litigation gains."
+      },
+      capgoods: {
+        title: "Capital Goods & Infra Matrix",
+        sheetTab: "capitalgoods",
+        val: "pe",
+        valName: "P/E Ratio (x)",
+        valDesc: "Compare with order pipeline and infra capex cycle",
+        m: [
+          { k: "roce", n: "ROCE (%)", d: "u", c: [12, 16, 20], desc: "Return on capital employed" },
+          { k: "ebitda", n: "EBITDA Margin (%)", d: "u", c: [8, 12, 16], desc: "Operating margin on executed orders" },
+          { k: "obs", n: "Order Book / Sales (x)", d: "u", c: [1.5, 2.5, 3.5], desc: "Revenue visibility; total executable book / sales" },
+          { k: "oig", n: "Order Inflow Growth (%)", d: "u", c: [5, 12, 20], desc: "YoY expansion in fresh order intake" },
+          { k: "revg", n: "Revenue Growth (%)", d: "u", c: [5, 10, 15], desc: "Execution speed and revenue recognized YoY" },
+          { k: "recd", n: "Receivable Days", d: "d", c: [120, 90, 60], desc: "Lower is better; PSUs/Govt agencies typically delay payments" },
+          { k: "wcd", n: "Working Capital Days", d: "d", c: [150, 100, 60], desc: "Cash trapped in WIP, inventory, and retention money" },
+          { k: "nde", n: "Net Debt / EBITDA (x)", d: "d", c: [2, 1, 0.3], desc: "Leverage; lower is safer" },
+          { k: "rm", n: "RM Cost (% of Sales)", d: "d", c: [65, 60, 55], desc: "Input commodities (steel, copper); lower is better" }
+        ],
+        flags: [
+          { k: "clientconc", n: "Client Concentration", d: "Exposure to top 3 clients or single ministry (Railways/Power)" },
+          { k: "govt", n: "Govt Capex Dependency", d: "Share of order book tied directly to budgetary allocations" },
+          { k: "exec", n: "Execution Track Record", d: "Track record of LD (liquidated damages) and cost overruns" }
+        ],
+        foot: "Order book/sales and order inflow growth matter more than trailing revenue — they show future billings."
+      }
+    };
 
-    // Theme Setup & Persistence
+    let currentTab = "bank";
+    let store = { bank: [], nbfc: [], auto: [], pharma: [], capgoods: [] };
+
+    // Theme Management
     const themeBtn = document.getElementById("btnThemeToggle");
-    const currentTheme = localStorage.getItem("app_fin_theme") || "light";
+    const currentTheme = localStorage.getItem("sect_matrix_theme") || "light";
     document.documentElement.setAttribute("data-theme", currentTheme);
-    updateThemeButtonText(currentTheme);
-
-    function updateThemeButtonText(theme) {
-      themeBtn.innerHTML = theme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode";
-    }
+    themeBtn.innerHTML = currentTheme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode";
 
     themeBtn.addEventListener("click", () => {
       const active = document.documentElement.getAttribute("data-theme");
       const next = active === "light" ? "dark" : "light";
       document.documentElement.setAttribute("data-theme", next);
-      localStorage.setItem("app_fin_theme", next);
-      updateThemeButtonText(next);
+      localStorage.setItem("sect_matrix_theme", next);
+      themeBtn.innerHTML = next === "light" ? "🌙 Dark Mode" : "☀️ Light Mode";
     });
 
-    const BANK_METRICS = [
-      {
-        category: "Profitability & Margin",
-        items: [
-          { key: "roa", name: "ROA (%)", desc: "Return on Assets (Annualized)", cutoffs: [0.8, 1.2, 1.8], higherIsBetter: true },
-          { key: "roe", name: "ROE (%)", desc: "Return on Equity", cutoffs: [12, 15, 18], higherIsBetter: true },
-          { key: "nim", name: "NIM (%)", desc: "Net Interest Margin", cutoffs: [2.5, 3.0, 4.0], higherIsBetter: true },
-          { key: "ci",  name: "Cost to Income (%)", desc: "Operating Expense Efficiency", cutoffs: [55, 45, 40], higherIsBetter: false }
-        ]
-      },
-      {
-        category: "Asset Quality & Risk",
-        items: [
-          { key: "gnpa", name: "Gross NPA (%)", desc: "Total Stressed Advances Ratio", cutoffs: [4.0, 2.5, 1.5], higherIsBetter: false },
-          { key: "nnpa", name: "Net NPA (%)", desc: "Bad Loans After Provisions", cutoffs: [1.2, 0.6, 0.3], higherIsBetter: false },
-          { key: "pcr",  name: "PCR (%)", desc: "Provision Coverage Ratio", cutoffs: [60, 70, 80], higherIsBetter: true },
-          { key: "cc",   name: "Credit Cost (%)", desc: "Annualized Provisions / Advances", cutoffs: [1.5, 1.0, 0.5], higherIsBetter: false }
-        ]
-      },
-      {
-        category: "Growth & Capital Strength",
-        items: [
-          { key: "lg",   name: "Loan Growth (%)", desc: "Advances Expansion YoY", cutoffs: [8, 12, 18], higherIsBetter: true },
-          { key: "dg",   name: "Deposit Growth (%)", desc: "Deposits Expansion YoY", cutoffs: [8, 10, 15], higherIsBetter: true },
-          { key: "casa", name: "CASA Ratio (%)", desc: "Current & Savings Deposits", cutoffs: [25, 35, 40], higherIsBetter: true },
-          { key: "car",  name: "CRAR / CAR (%)", desc: "Total Capital Adequacy Ratio", cutoffs: [12, 15, 18], higherIsBetter: true },
-          { key: "cet1", name: "CET1 (%)", desc: "Common Equity Tier 1 Capital", cutoffs: [10, 12, 14], higherIsBetter: true }
-        ]
-      },
-      {
-        category: "Valuation & Earnings Yield",
-        items: [
-          { key: "pb", name: "P/B Ratio (x)", desc: "Price to Book Multiple", unscored: true },
-          { key: "ey", name: "Earnings Yield (%)", desc: "Implied Yield (ROE / P/B)", unscored: true }
-        ]
-      }
-    ];
-
-    const NBFC_METRICS = [
-      {
-        category: "Profitability & Margin",
-        items: [
-          { key: "roa", name: "ROA (%)", desc: "Return on Managed Assets", cutoffs: [1.5, 2.2, 3.0], higherIsBetter: true },
-          { key: "roe", name: "ROE (%)", desc: "Return on Equity", cutoffs: [12, 15, 18], higherIsBetter: true },
-          { key: "nim", name: "NIM / Spread (%)", desc: "Net Interest Margin", cutoffs: [4.0, 5.5, 7.0], higherIsBetter: true },
-          { key: "ci",  name: "Cost to Income (%)", desc: "Operating Efficiency", cutoffs: [50, 40, 30], higherIsBetter: false }
-        ]
-      },
-      {
-        category: "Asset Quality & Risk",
-        items: [
-          { key: "gs3", name: "Gross Stage 3 (%)", desc: "Stressed Loan Book", cutoffs: [4.0, 2.5, 1.5], higherIsBetter: false },
-          { key: "ns3", name: "Net Stage 3 (%)", desc: "Stage 3 after Impairment", cutoffs: [2.0, 1.2, 0.6], higherIsBetter: false },
-          { key: "pcr", name: "PCR (%)", desc: "Stage 3 Coverage Ratio", cutoffs: [50, 65, 80], higherIsBetter: true },
-          { key: "cc",  name: "Credit Cost (%)", desc: "Provisions / AUM", cutoffs: [2.0, 1.2, 0.6], higherIsBetter: false }
-        ]
-      },
-      {
-        category: "Growth & Leverage",
-        items: [
-          { key: "aum", name: "AUM Growth (%)", desc: "Loan Book Expansion YoY", cutoffs: [10, 15, 22], higherIsBetter: true },
-          { key: "de",  name: "Debt to Equity (x)", desc: "Leverage Multiplier", cutoffs: [5.5, 4.0, 3.0], higherIsBetter: false },
-          { key: "car", name: "CRAR (%)", desc: "Capital Adequacy Ratio (Min 15%)", cutoffs: [15, 18, 22], higherIsBetter: true }
-        ]
-      },
-      {
-        category: "Valuation & Earnings Yield",
-        items: [
-          { key: "pb", name: "P/B Ratio (x)", desc: "Price to Book Multiple", unscored: true },
-          { key: "ey", name: "Earnings Yield (%)", desc: "Implied Yield (ROE / P/B)", unscored: true }
-        ]
-      }
-    ];
-
-    let currentConfig = BANK_METRICS;
-
-    function setViewMode(type) {
-      activeTab = type;
-      document.getElementById("stockTypeSelect").value = type;
-      currentConfig = (type === "bank") ? BANK_METRICS : NBFC_METRICS;
-      document.getElementById("appTitle").innerText = (type === "bank") ? "Bank Fundamental Matrix" : "NBFC Fundamental Matrix";
-      document.getElementById("btnModalImport").className = (type === "bank") ? "btn-action btn-load-bank" : "btn-action btn-load-nbfc";
-      
-      document.getElementById("btnSaveBanks").style.display = (type === "bank") ? "inline-flex" : "none";
-      document.getElementById("btnLoadBanks").style.display = (type === "bank") ? "inline-flex" : "none";
-      document.getElementById("btnSaveNBFCs").style.display = (type === "nbfc") ? "inline-flex" : "none";
-      document.getElementById("btnLoadNBFCs").style.display = (type === "nbfc") ? "inline-flex" : "none";
-    }
-
-    document.getElementById("stockTypeSelect").addEventListener("change", (e) => {
-      setViewMode(e.target.value);
-      renderTable();
-    });
-
-    function calculateRating(val, cfg) {
-      if (val === undefined || val === null || val === "" || cfg.unscored) return null;
-      val = Number(val);
-      const [c1, c2, c3] = cfg.cutoffs;
-      if (cfg.higherIsBetter) {
-        if (val >= c3) return { text: "Excellent", class: "rating-excellent", score: 100 };
-        if (val >= c2) return { text: "Good", class: "rating-good", score: 75 };
-        if (val >= c1) return { text: "Average", class: "rating-average", score: 50 };
-        return { text: "Poor", class: "rating-poor", score: 0 };
+    // Reference Rating Logic: 0 (Poor), 1 (Average), 2 (Good), 3 (Excellent)
+    function rateMetric(metricCfg, val) {
+      if (val === undefined || val === null || val === "" || isNaN(val)) return -1;
+      const x = parseFloat(val);
+      const [c0, c1, c2] = metricCfg.c;
+      if (metricCfg.d === "u") {
+        return x < c0 ? 0 : (x < c1 ? 1 : (x < c2 ? 2 : 3));
       } else {
-        if (val <= c3) return { text: "Excellent", class: "rating-excellent", score: 100 };
-        if (val <= c2) return { text: "Good", class: "rating-good", score: 75 };
-        if (val <= c1) return { text: "Average", class: "rating-average", score: 50 };
-        return { text: "Poor", class: "rating-poor", score: 0 };
+        return x > c0 ? 0 : (x > c1 ? 1 : (x > c2 ? 2 : 3));
       }
     }
 
-    function computeSummary(stock) {
-      let totalScore = 0, count = 0, poorCount = 0;
-      currentConfig.forEach(cat => {
-        cat.items.forEach(cfg => {
-          if (!cfg.unscored && stock.v[cfg.key] !== undefined && stock.v[cfg.key] !== "") {
-            const r = calculateRating(stock.v[cfg.key], cfg);
-            if (r) {
-              totalScore += r.score;
-              count++;
-              if (r.text === "Poor") poorCount++;
-            }
-          }
-        });
+    // Exact Score & Verdict Formula from Reference Checklist
+    function computeStockHealth(secCfg, stock) {
+      let filledCount = 0;
+      let totalPts = 0;
+      let poorCount = 0;
+
+      secCfg.m.forEach(m => {
+        const val = stock.v[m.k];
+        const r = rateMetric(m, val);
+        if (r >= 0) {
+          filledCount++;
+          totalPts += r;
+          if (r === 0) poorCount++;
+        }
       });
-      const finalScore = count ? Math.round(totalScore / count) : 0;
-      const verdict = finalScore >= 75 ? "Strong" : (finalScore >= 50 ? "Moderate" : "Weak");
-      const verdictClass = finalScore >= 75 ? "verdict-strong" : (finalScore >= 50 ? "verdict-moderate" : "verdict-weak");
-      return { finalScore, poorCount, verdict, verdictClass };
+
+      // Composite Checklist Score = round( (points / (3 * filled)) * 100 )
+      const score = filledCount > 0 ? Math.round((totalPts / (3 * filledCount)) * 100) : null;
+      
+      let verdict = "";
+      let verdictClass = "";
+
+      if (filledCount < Math.ceil(secCfg.m.length * 0.4)) {
+        verdict = "Fill more rows";
+        verdictClass = "vd-fill";
+      } else if (score >= 75) {
+        verdict = "Strong";
+        verdictClass = "vd-strong";
+      } else if (score >= 55) {
+        verdict = "Decent";
+        verdictClass = "vd-decent";
+      } else if (score >= 35) {
+        verdict = "Mixed";
+        verdictClass = "vd-mixed";
+      } else {
+        verdict = "Weak";
+        verdictClass = "vd-weak";
+      }
+
+      return { score, filledCount, totalRows: secCfg.m.length, poorCount, verdict, verdictClass };
     }
 
     function renderTable() {
-      const displayedStocks = (activeTab === "bank") ? bankStocks : nbfcStocks;
+      const cfg = SECTORS[currentTab];
+      const list = store[currentTab];
+
+      document.getElementById("appTitle").innerText = cfg.title;
+      document.getElementById("sectorFootnote").innerText = cfg.foot;
+
       const headerRow = document.getElementById("headerRow");
       const tbody = document.getElementById("matrixBody");
 
-      if (displayedStocks.length === 0) {
+      if (list.length === 0) {
         headerRow.innerHTML = '<th class="metric-col">Metric & Definition</th><th>Status</th>';
         tbody.innerHTML = `
           <tr>
             <td colspan="2" style="text-align: center; padding: 48px 16px; color: var(--text-dim); font-size: 13px;">
-              No ${activeTab === "bank" ? "banks" : "NBFCs"} loaded. Use <strong>+ Add</strong> above to scrape a ticker or import via <strong>Load ${activeTab === "bank" ? "Banks" : "NBFCs"}</strong>.
+              No ${cfg.title.split(" ")[0]} stocks loaded. Use <strong>+ Scrape & Add</strong> above or import from sheet using <strong>Load from Sheet</strong>.
             </td>
           </tr>
         `;
         return;
       }
 
-      displayedStocks.forEach(s => { s.summary = computeSummary(s); });
-      displayedStocks.sort((a, b) => b.summary.finalScore - a.summary.finalScore);
+      // Compute & Sort Left to Right by Score
+      list.forEach(s => { s.health = computeStockHealth(cfg, s); });
+      list.sort((a, b) => (b.health.score || 0) - (a.health.score || 0));
 
       headerRow.innerHTML = '<th class="metric-col">Metric & Definition</th>';
-      
-      displayedStocks.forEach((s, idx) => {
+      list.forEach((s, idx) => {
         const rankClass = idx === 0 ? "rank-first" : "";
         const rankLabel = idx === 0 ? "#1 LEADER" : `#${idx + 1}`;
         const th = document.createElement("th");
-        th.className = "bank-col";
+        th.className = "stock-col";
         th.innerHTML = `
-          <div class="bank-header-wrap">
-            <div class="bank-meta">
+          <div class="stock-header-wrap">
+            <div class="stock-meta">
               <span class="rank-tag ${rankClass}">${rankLabel}</span>
               <div>
-                <span class="bank-symbol">${s.name || s.symbol}</span>
-                <span class="bank-period">${s.period || ""}</span>
+                <span class="stock-symbol">${s.name}</span>
+                <span class="stock-period">${s.period || ""}</span>
               </div>
             </div>
             <button class="btn-remove" onclick="removeStock(${idx})">&times;</button>
@@ -605,125 +586,228 @@
 
       tbody.innerHTML = "";
 
-      // Composite Rating Row
+      // 1. Composite Score & Verdict Summary Row
       const scoreRow = document.createElement("tr");
       scoreRow.className = "summary-row";
-      scoreRow.innerHTML = `<td class="metric-col"><strong>Overall Score & Verdict</strong><div class="metric-desc">Composite Financial Strength</div></td>`;
-      displayedStocks.forEach(s => {
+      scoreRow.innerHTML = `<td class="metric-col"><strong>Overall Score & Verdict</strong><div class="metric-desc">Checklist Composite (0-100)</div></td>`;
+      list.forEach(s => {
         scoreRow.innerHTML += `
-          <td class="bank-col">
-            <div class="score-badge">${s.summary.finalScore} / 100</div>
-            <div class="verdict-tag ${s.summary.verdictClass}">${s.summary.verdict} (${s.summary.poorCount} Poor)</div>
+          <td class="stock-col">
+            <div class="score-badge">${s.health.score !== null ? s.health.score + ' / 100' : '-'}</div>
+            <div class="verdict-tag ${s.health.verdictClass}">${s.health.verdict} (${s.health.poorCount} Poor)</div>
           </td>
         `;
       });
       tbody.appendChild(scoreRow);
 
-      // Category Metric Rows
-      currentConfig.forEach(cat => {
-        const catRow = document.createElement("tr");
-        catRow.className = "category-row";
-        catRow.innerHTML = `<td colspan="${displayedStocks.length + 1}">${cat.category}</td>`;
-        tbody.appendChild(catRow);
+      // 2. Scored Fundamentals Category
+      const catRow = document.createElement("tr");
+      catRow.className = "category-row";
+      catRow.innerHTML = `<td colspan="${list.length + 1}">Scored Fundamentals (${cfg.m.length} Metrics)</td>`;
+      tbody.appendChild(catRow);
 
-        cat.items.forEach(cfg => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
+      cfg.m.forEach(m => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="metric-col">
+            ${m.n}
+            <div class="metric-desc">${m.desc}</div>
+          </td>
+        `;
+
+        list.forEach(s => {
+          const val = s.v[m.k];
+          if (val === undefined || val === null || val === "") {
+            tr.innerHTML += `<td class="stock-col"><div class="cell-value-wrap"><span class="cell-value">-</span></div></td>`;
+          } else {
+            const r = rateMetric(m, val);
+            const pill = r >= 0 ? `<span class="badge-r ${RATING_CLASSES[r]}">${RATING_NAMES[r]}</span>` : "";
+            tr.innerHTML += `
+              <td class="stock-col">
+                <div class="cell-value-wrap">
+                  <span class="cell-value">${val}</span>
+                  ${pill}
+                </div>
+              </td>
+            `;
+          }
+        });
+        tbody.appendChild(tr);
+      });
+
+      // 3. Valuation Section (Unscored)
+      const valCatRow = document.createElement("tr");
+      valCatRow.className = "category-row";
+      valCatRow.innerHTML = `<td colspan="${list.length + 1}">Valuation Multiples (Not Scored)</td>`;
+      tbody.appendChild(valCatRow);
+
+      const valRow = document.createElement("tr");
+      valRow.innerHTML = `
+        <td class="metric-col">
+          ${cfg.valName}
+          <div class="metric-desc">${cfg.valDesc}</div>
+        </td>
+      `;
+      list.forEach(s => {
+        const val = s.v[cfg.val] || s.v.pb || s.v.pe || "-";
+        valRow.innerHTML += `<td class="stock-col"><div class="cell-value-wrap"><span class="cell-value">${val}</span></div></td>`;
+      });
+      tbody.appendChild(valRow);
+
+      // P/B Specific: Earnings Yield (ROE / P/B)
+      if (cfg.val === "pb") {
+        const eyRow = document.createElement("tr");
+        eyRow.innerHTML = `
+          <td class="metric-col">
+            Earnings Yield on Price (%)
+            <div class="metric-desc">Implied yield: ROE &divide; P/B</div>
+          </td>
+        `;
+        list.forEach(s => {
+          const roe = parseFloat(s.v.roe);
+          const pb = parseFloat(s.v.pb || s.v.val);
+          const ey = (!isNaN(roe) && !isNaN(pb) && pb > 0) ? (roe / pb).toFixed(1) + "%" : "-";
+          eyRow.innerHTML += `<td class="stock-col"><div class="cell-value-wrap"><span class="cell-value">${ey}</span></div></td>`;
+        });
+        tbody.appendChild(eyRow);
+      }
+
+      // 4. Qualitative Flags Section (Auto, Pharma, Capital Goods)
+      if (cfg.flags && cfg.flags.length > 0) {
+        const flagCatRow = document.createElement("tr");
+        flagCatRow.className = "category-row";
+        flagCatRow.innerHTML = `<td colspan="${list.length + 1}">Qualitative Checklist Flags (Not Scored)</td>`;
+        tbody.appendChild(flagCatRow);
+
+        cfg.flags.forEach(f => {
+          const fRow = document.createElement("tr");
+          fRow.innerHTML = `
             <td class="metric-col">
-              ${cfg.name}
-              <div class="metric-desc">${cfg.desc}</div>
+              ${f.n}
+              <div class="metric-desc">${f.d}</div>
             </td>
           `;
-
-          displayedStocks.forEach(s => {
-            let val = s.v[cfg.key];
-            if (cfg.key === "ey" && s.v.roe && s.v.pb) {
-              val = Number((Number(s.v.roe) / Number(s.v.pb)).toFixed(1));
-            }
-
-            if (val === undefined || val === null || val === "") {
-              row.innerHTML += `<td class="bank-col"><div class="cell-value-wrap"><span class="cell-value">-</span></div></td>`;
-            } else {
-              const r = calculateRating(val, cfg);
-              const pill = r ? `<span class="rating-pill ${r.class}">${r.text}</span>` : "";
-              row.innerHTML += `
-                <td class="bank-col">
-                  <div class="cell-value-wrap">
-                    <span class="cell-value">${val}</span>
-                    ${pill}
-                  </div>
-                </td>
-              `;
-            }
+          list.forEach(s => {
+            const flagVal = s.v[f.k] || "Clear / Stable";
+            fRow.innerHTML += `
+              <td class="stock-col">
+                <div class="cell-value-wrap" style="max-width: 100%;">
+                  <span class="cell-value" style="font-size: 11px; font-weight: 500;">${flagVal}</span>
+                </div>
+              </td>
+            `;
           });
-          tbody.appendChild(row);
+          tbody.appendChild(fRow);
         });
-      });
+      }
     }
 
-    async function addStock(symbol, period) {
-      const sym = symbol.trim().toUpperCase();
-      if (!sym) return;
-      const type = document.getElementById("stockTypeSelect").value;
-      setViewMode(type);
-
-      try {
-        const res = await fetch(`http://127.0.0.1:8000/fetch?symbol=${sym}&type=${type}`);
-        if (!res.ok) throw new Error("Fetch failed");
-        const json = await res.json();
-        
-        if (type === "bank") {
-          bankStocks = bankStocks.filter(s => (s.name || s.symbol) !== sym);
-          bankStocks.push({ name: sym, period: period || "Q1 FY27", v: json.v || {} });
-        } else {
-          nbfcStocks = nbfcStocks.filter(s => (s.name || s.symbol) !== sym);
-          nbfcStocks.push({ name: sym, period: period || "Q1 FY27", v: json.v || {} });
-        }
+    // Switch Sector View
+    document.querySelectorAll(".sector-nav .btn-tab").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".sector-nav .btn-tab").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentTab = btn.getAttribute("data-tab");
         renderTable();
-      } catch (err) {
-        alert("bridge.py is unreachable. If you are browsing on mobile away from your laptop, use 'Load Banks' or 'Load NBFCs' to view cloud-saved data.");
-      }
-    }
+      });
+    });
 
-    function removeStock(index) {
-      if (activeTab === "bank") {
-        bankStocks.splice(index, 1);
-      } else {
-        nbfcStocks.splice(index, 1);
-      }
+    // Remove Single Stock Column
+    function removeStock(idx) {
+      store[currentTab].splice(idx, 1);
       renderTable();
     }
 
-    // Modal Sheet Importer
-    let fetchedSheetStocks = [];
+    // Clear Table Button
+    document.getElementById("btnClearCurrent").addEventListener("click", () => {
+      if (store[currentTab].length === 0) return;
+      if (confirm(`Clear all stocks displayed in ${SECTORS[currentTab].title}?`)) {
+        store[currentTab] = [];
+        renderTable();
+      }
+    });
 
-    async function openStockPicker(tabType) {
-      setViewMode(tabType);
-      document.getElementById("modalTitle").innerText = (tabType === "bank") ? "Select Banks from Sheet" : "Select NBFCs from Sheet";
+    // Live Scraper Integration
+    async function scrapeAndAddStock(sym, period) {
+      sym = sym.trim().toUpperCase();
+      if (!sym) return;
 
       try {
-        const res = await fetch(`${GOOGLE_SCRIPT_URL}?tab=${tabType}`);
+        const res = await fetch(`http://127.0.0.1:8000/fetch?symbol=${sym}&type=${currentTab}`);
+        if (!res.ok) throw new Error("Scrape failed");
+        const json = await res.json();
+
+        // De-duplicate in active view
+        store[currentTab] = store[currentTab].filter(s => s.name !== sym);
+        store[currentTab].push({
+          name: sym,
+          period: period || "Q1 FY27",
+          v: json.v || {}
+        });
+
+        renderTable();
+      } catch (err) {
+        alert("bridge.py is unreachable. If you are browsing on mobile, use 'Load from Sheet' to import cloud-saved records.");
+      }
+    }
+
+    document.getElementById("btnAddTicker").addEventListener("click", () => {
+      const ticker = document.getElementById("tickerInput").value;
+      const period = document.getElementById("periodInput").value;
+      scrapeAndAddStock(ticker, period);
+      document.getElementById("tickerInput").value = "";
+    });
+
+    document.getElementById("tickerInput").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        const ticker = e.target.value;
+        const period = document.getElementById("periodInput").value;
+        scrapeAndAddStock(ticker, period);
+        e.target.value = "";
+      }
+    });
+
+    // Modal Sheet Importer
+    let sheetFetchedStocks = [];
+
+    async function openSheetPicker() {
+      const cfg = SECTORS[currentTab];
+      document.getElementById("modalTitle").innerText = `Select ${cfg.title.split(" ")[0]} Stocks from Sheet`;
+
+      try {
+        const res = await fetch(`${GOOGLE_SCRIPT_URL}?tab=${cfg.sheetTab}`);
         const data = await res.json();
         if (!Array.isArray(data) || data.length === 0) {
-          alert(`No records found in the '${tabType === "bank" ? "Banks" : "NBFCs"}' sheet tab.`);
+          alert(`No records found in the '${cfg.title.split(" ")[0]}' tab of your Google Sheet.`);
           return;
         }
 
+        // NEW BULLETPROOF TIMESTAMP DEDUPLICATION:
+        // Reads from bottom to top (or sorts by timestamp descending)
         const map = new Map();
-        data.forEach(item => map.set(item.name, item));
-        fetchedSheetStocks = Array.from(map.values());
+        
+        // Sort sheet records newest first
+        data.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+
+        data.forEach(item => {
+          if (!map.has(item.name)) {
+            map.set(item.name, item); // Locks in the latest timestamp row
+          }
+        });
+
+        sheetFetchedStocks = Array.from(map.values());
 
         const listContainer = document.getElementById("stockListContainer");
         listContainer.innerHTML = "";
-        document.getElementById("modalCounter").innerText = `${fetchedSheetStocks.length} stocks available in cloud`;
+        document.getElementById("modalCounter").innerText = `${sheetFetchedStocks.length} stocks available in cloud`;
 
-        fetchedSheetStocks.forEach((item, idx) => {
+        sheetFetchedStocks.forEach((item, idx) => {
           const row = document.createElement("label");
           row.className = "stock-item-row";
           row.innerHTML = `
             <input type="checkbox" class="stock-checkbox" data-idx="${idx}" checked>
-            <span class="stock-item-name">${item.name}</span>
-            <span class="stock-item-period">${item.period || ""}</span>
+            <span class="stock-symbol">${item.name}</span>
+            <span class="stock-period" style="margin-left: auto;">${item.period || ""}</span>
           `;
           listContainer.appendChild(row);
         });
@@ -734,8 +818,7 @@
       }
     }
 
-    document.getElementById("btnLoadBanks").addEventListener("click", () => openStockPicker("bank"));
-    document.getElementById("btnLoadNBFCs").addEventListener("click", () => openStockPicker("nbfc"));
+    document.getElementById("btnLoadCloud").addEventListener("click", openSheetPicker);
 
     function closeModal() {
       document.getElementById("stockModal").style.display = "none";
@@ -754,7 +837,7 @@
       const selected = [];
       document.querySelectorAll(".stock-checkbox:checked").forEach(cb => {
         const idx = Number(cb.getAttribute("data-idx"));
-        selected.push(fetchedSheetStocks[idx]);
+        selected.push(sheetFetchedStocks[idx]);
       });
 
       if (selected.length === 0) {
@@ -762,29 +845,25 @@
         return;
       }
 
-      if (activeTab === "bank") {
-        bankStocks = selected;
-      } else {
-        nbfcStocks = selected;
-      }
-
+      store[currentTab] = selected;
       renderTable();
       closeModal();
     });
 
     // Cloud Sheet Saver
-    async function saveToGoogleSheet(tabName) {
-      const currentList = (tabName === "bank") ? bankStocks : nbfcStocks;
-      if (currentList.length === 0) {
-        alert(`No ${tabName === "bank" ? "banks" : "NBFCs"} currently loaded to save.`);
+    document.getElementById("btnSaveCloud").addEventListener("click", async () => {
+      const cfg = SECTORS[currentTab];
+      const list = store[currentTab];
+      if (list.length === 0) {
+        alert(`No stocks currently loaded in ${cfg.title} to save.`);
         return;
       }
 
       const payload = {
-        tab: tabName,
+        tab: cfg.sheetTab,
         period: document.getElementById("periodInput").value || "Q1 FY27",
-        stocks: currentList.map(s => ({
-          name: s.name || s.symbol,
+        stocks: list.map(s => ({
+          name: s.name,
           v: s.v
         }))
       };
@@ -796,33 +875,13 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
-        alert(`Saved successfully to '${tabName === "bank" ? "Banks" : "NBFCs"}' tab in Google Sheets!`);
+        alert(`Saved successfully to '${cfg.title.split(" ")[0]}' tab in Google Sheets!`);
       } catch (err) {
         alert("Error saving to Google Sheet: " + err);
       }
-    }
-
-    document.getElementById("btnSaveBanks").addEventListener("click", () => saveToGoogleSheet("bank"));
-    document.getElementById("btnSaveNBFCs").addEventListener("click", () => saveToGoogleSheet("nbfc"));
-
-    document.getElementById("btnAddTicker").addEventListener("click", () => {
-      const ticker = document.getElementById("tickerInput").value;
-      const period = document.getElementById("periodInput").value;
-      addStock(ticker, period);
-      document.getElementById("tickerInput").value = "";
     });
 
-    document.getElementById("tickerInput").addEventListener("keypress", (e) => {
-      if (e.key === "Enter") {
-        const ticker = e.target.value;
-        const period = document.getElementById("periodInput").value;
-        addStock(ticker, period);
-        e.target.value = "";
-      }
-    });
-
-    // Boot into Bank Mode
-    setViewMode("bank");
+    // Initial Launch in Bank Mode
     renderTable();
   </script>
 </body>
