@@ -254,10 +254,10 @@
   </header>
 
   <div class="sector-nav" id="sectorNav">
-    <button class="btn-tab active" data-tab="auto">Auto</button>
+    <button class="btn-tab" data-tab="auto">Auto</button>
     <button class="btn-tab" data-tab="bank">Banks</button>
     <button class="btn-tab" data-tab="nbfc">NBFCs</button>
-    <button class="btn-tab" data-tab="pharma">Pharma</button>
+    <button class="btn-tab active" data-tab="pharma">Pharma</button>
     <button class="btn-tab" data-tab="capgoods">Capital Goods</button>
     <button class="btn-tab" data-tab="other">Other</button>
   </div>
@@ -466,7 +466,7 @@
       }
     };
 
-    let currentTab = "auto";
+    let currentTab = "pharma"; // Set Pharma as default active tab on launch
     let store = { bank: [], nbfc: [], auto: [], pharma: [], capgoods: [], other: [] };
     let sheetFetchedStocks = [];
 
@@ -522,13 +522,12 @@
       return list;
     }
 
-    // Ultra-reliable metric resolution directly matching Finance Fundamentals.xlsx column variations
+    // Direct mapping to Excel column names as verified from Finance Fundamentals.xlsx
     function extractMetricValue(vObj, metricKey) {
       if (!vObj) return undefined;
       if (vObj[metricKey] !== undefined) return vObj[metricKey];
       if (vObj[metricKey.toUpperCase()] !== undefined) return vObj[metricKey.toUpperCase()];
 
-      // Direct synonym aliases for Excel sheet columns
       const aliases = {
         "roa": ["ROA (%)", "ROA", "roa"],
         "roe": ["ROE (%)", "ROE", "roe"],
@@ -571,7 +570,6 @@
         if (vObj[keyAliases[i]] !== undefined) return vObj[keyAliases[i]];
       }
 
-      // Normalized fallback
       const cleanTarget = metricKey.toLowerCase().replace(/[^a-z0-9]/g, "");
       for (const k in vObj) {
         if (k.toLowerCase().replace(/[^a-z0-9]/g, "") === cleanTarget) {
@@ -610,14 +608,20 @@
       return { score, filledCount, totalRows: allMetrics.length, poorCount, verdict, verdictClass };
     }
 
-    function switchTab(targetTab) {
+    // Auto-fetch from Google Sheets on tab switch if memory is empty
+    async function switchTab(targetTab) {
       if (!SECTORS[targetTab]) return;
       currentTab = targetTab;
       document.querySelectorAll(".sector-nav .btn-tab").forEach(b => {
         if (b.getAttribute("data-tab") === targetTab) b.classList.add("active");
         else b.classList.remove("active");
       });
-      renderTable();
+
+      if (!store[currentTab] || store[currentTab].length === 0) {
+        await loadActiveStocksFromCloud(currentTab);
+      } else {
+        renderTable();
+      }
     }
 
     function updateMetricValue(stockIdx, metricKey, newVal) {
@@ -640,7 +644,7 @@
 
     function renderTable() {
       const cfg = SECTORS[currentTab];
-      const list = store[currentTab];
+      const list = store[currentTab] || [];
 
       document.getElementById("appTitle").innerText = cfg.title;
 
@@ -739,7 +743,7 @@
         });
       });
 
-      // Valuation Row (Strictly filter out descriptive text like "Direct ben")
+      // Valuation Row (Strictly numbers, no qualitative strings)
       const valCatRow = document.createElement("tr");
       valCatRow.className = "category-row";
       valCatRow.innerHTML = `<td colspan="${list.length + 1}">Step 8: Valuation Multiples & Implied Yield</td>`;
@@ -803,7 +807,7 @@
 
     document.getElementById("btnClearCurrent").addEventListener("click", async () => {
       const cfg = SECTORS[currentTab];
-      if (store[currentTab].length === 0) return;
+      if (!store[currentTab] || store[currentTab].length === 0) return;
       if (confirm(`Hide all stocks in ${cfg.title}? (All rows remain safely stored in Google Sheet with Active = 0)`)) {
         store[currentTab] = [];
         saveLocalCache();
@@ -1028,17 +1032,20 @@
       } catch (e) { alert("Save failed: " + e); }
     });
 
-    async function loadInitialActiveFromCloud() {
-      const cfg = SECTORS[currentTab];
+    // Cloud fetch for any active sector tab
+    async function loadActiveStocksFromCloud(tabKey) {
+      const cfg = SECTORS[tabKey];
       try {
         const res = await fetch(`${GOOGLE_SCRIPT_URL}?tab=${cfg.sheetTab}`);
         const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
-          store[currentTab] = data;
+        if (Array.isArray(data)) {
+          store[tabKey] = data;
           saveLocalCache();
-          renderTable();
         }
-      } catch (e) {}
+      } catch (e) {
+        console.warn(`Could not auto-fetch ${cfg.sheetTab}:`, e);
+      }
+      renderTable();
     }
 
     const themeBtn = document.getElementById("btnThemeToggle");
@@ -1049,10 +1056,11 @@
       themeBtn.innerHTML = next === "light" ? "🌙 Dark Mode" : "☀️ Light Mode";
     });
 
+    // Initial sequence
     loadLocalCache();
     renderTable();
     checkBridgeStatus();
-    loadInitialActiveFromCloud();
+    loadActiveStocksFromCloud(currentTab); // Fetches active stocks for Pharma immediately on launch
   </script>
 </body>
 </html>
