@@ -254,12 +254,12 @@
   </header>
 
   <div class="sector-nav" id="sectorNav">
-    <button class="btn-tab active" data-tab="pharma">Pharma</button>
-    <button class="btn-tab" data-tab="capgoods">Capital Goods</button>
-    <button class="btn-tab" data-tab="auto">Auto</button>
-    <button class="btn-tab" data-tab="nbfc">NBFCs</button>
+    <button class="btn-tab active" data-tab="auto">Auto</button>
     <button class="btn-tab" data-tab="bank">Banks</button>
+    <button class="btn-tab" data-tab="capgoods">Capital Goods</button>
+    <button class="btn-tab" data-tab="nbfc">NBFCs</button>
     <button class="btn-tab" data-tab="other">Other</button>
+    <button class="btn-tab" data-tab="pharma">Pharma</button>
   </div>
 
   <div class="controls">
@@ -465,7 +465,7 @@
       }
     };
 
-    let currentTab = "pharma";
+    let currentTab = "auto";
     let store = { bank: [], nbfc: [], auto: [], pharma: [], capgoods: [], other: [] };
     let sheetFetchedStocks = [];
 
