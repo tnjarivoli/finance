@@ -254,11 +254,11 @@
   </header>
 
   <div class="sector-nav" id="sectorNav">
-    <button class="btn-tab" data-tab="auto">Auto</button>
-    <button class="btn-tab" data-tab="bank">Banks</button>
-    <button class="btn-tab" data-tab="nbfc">NBFCs</button>
     <button class="btn-tab active" data-tab="pharma">Pharma</button>
     <button class="btn-tab" data-tab="capgoods">Capital Goods</button>
+    <button class="btn-tab" data-tab="auto">Auto</button>
+    <button class="btn-tab" data-tab="nbfc">NBFCs</button>
+    <button class="btn-tab" data-tab="bank">Banks</button>
     <button class="btn-tab" data-tab="other">Other</button>
   </div>
 
@@ -289,7 +289,6 @@
     </table>
   </div>
 
-  <!-- Modal Dialog for Cloud Sheet Stock Selection -->
   <div class="modal-overlay" id="stockModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -388,8 +387,8 @@
             { k: "ebitda", n: "EBITDA Margin (%)", d: "u", c: [8, 11, 14], desc: "Operating profitability" }
           ]},
           { title: "Step 5: Margin Durability", metrics: [
-            { k: "rm", n: "RM Cost (% of Sales)", d: "d", c: [70, 65, 60], desc: "Raw material cost exposure" },
-            { k: "disc", n: "Discount (% of ASP)", d: "d", c: [5, 3, 1.5], desc: "Dealer discounting pressure" }
+            { k: "rm", n: "RM Cost (%)", n: "RM Cost (% of Sales)", d: "d", c: [70, 65, 60], desc: "Raw material cost exposure" },
+            { k: "disc", n: "Discount (%)", d: "d", c: [5, 3, 1.5], desc: "Dealer discounting pressure" }
           ]},
           { title: "Step 6: Working Capital", metrics: [
             { k: "wcd", n: "Working Capital Days", d: "d", c: [60, 40, 20], desc: "Cash conversion cycle" }
@@ -466,7 +465,7 @@
       }
     };
 
-    let currentTab = "pharma"; // Set Pharma as default active tab on launch
+    let currentTab = "pharma";
     let store = { bank: [], nbfc: [], auto: [], pharma: [], capgoods: [], other: [] };
     let sheetFetchedStocks = [];
 
@@ -522,7 +521,6 @@
       return list;
     }
 
-    // Direct mapping to Excel column names as verified from Finance Fundamentals.xlsx
     function extractMetricValue(vObj, metricKey) {
       if (!vObj) return undefined;
       if (vObj[metricKey] !== undefined) return vObj[metricKey];
@@ -608,7 +606,6 @@
       return { score, filledCount, totalRows: allMetrics.length, poorCount, verdict, verdictClass };
     }
 
-    // Auto-fetch from Google Sheets on tab switch if memory is empty
     async function switchTab(targetTab) {
       if (!SECTORS[targetTab]) return;
       currentTab = targetTab;
@@ -618,6 +615,7 @@
       });
 
       if (!store[currentTab] || store[currentTab].length === 0) {
+        renderLoading();
         await loadActiveStocksFromCloud(currentTab);
       } else {
         renderTable();
@@ -640,6 +638,19 @@
       if (!valStr && valStr !== 0) return null;
       const match = String(valStr).replace(",", "").replace("%", "").match(/[-+]?\d*\.?\d+/);
       return match ? parseFloat(match[0]) : null;
+    }
+
+    function renderLoading() {
+      const cfg = SECTORS[currentTab];
+      document.getElementById("appTitle").innerText = cfg.title;
+      document.getElementById("headerRow").innerHTML = '<th class="metric-col">Metric & Definition</th><th>Status</th>';
+      document.getElementById("matrixBody").innerHTML = `
+        <tr>
+          <td colspan="2" style="text-align: center; padding: 36px 16px; color: var(--accent-blue); font-size: 13px; font-weight: 600;">
+            ⏳ Fetching active stocks from Google Sheets (${cfg.sheetTab})...
+          </td>
+        </tr>
+      `;
     }
 
     function renderTable() {
@@ -743,7 +754,6 @@
         });
       });
 
-      // Valuation Row (Strictly numbers, no qualitative strings)
       const valCatRow = document.createElement("tr");
       valCatRow.className = "category-row";
       valCatRow.innerHTML = `<td colspan="${list.length + 1}">Step 8: Valuation Multiples & Implied Yield</td>`;
@@ -823,7 +833,6 @@
       }
     });
 
-    // Autocomplete Search
     const tickerInput = document.getElementById("tickerInput");
     const dropdown = document.getElementById("autocompleteDropdown");
     let debounceTimer = null;
@@ -879,7 +888,7 @@
           
           if (currentTab !== detectedSector) switchTab(detectedSector);
 
-          store[detectedSector] = store[detectedSector].filter(s => s.name !== resolvedSymbol);
+          store[detectedSector] = (store[detectedSector] || []).filter(s => s.name !== resolvedSymbol);
           store[detectedSector].push({
             name: resolvedSymbol,
             company_name: json.company_name || resolvedSymbol,
@@ -896,7 +905,7 @@
         }
       }
 
-      store[currentTab] = store[currentTab].filter(s => s.name !== sym);
+      store[currentTab] = (store[currentTab] || []).filter(s => s.name !== sym);
       store[currentTab].push({
         name: sym,
         company_name: sym,
@@ -921,12 +930,48 @@
       if (!e.target.closest(".search-input-group")) dropdown.style.display = "none";
     });
 
-    // ---------------- CLOUD LOAD & ACTIVE SYNC ----------------
+    // Uses JSONP callback mode to prevent CORS issues
+    function fetchSheetJSONP(url) {
+      return new Promise((resolve, reject) => {
+        const callbackName = "jsonp_callback_" + Math.round(100000 * Math.random());
+        const script = document.createElement("script");
+        const separator = url.indexOf("?") >= 0 ? "&" : "?";
+        
+        window[callbackName] = function(data) {
+          delete window[callbackName];
+          document.body.removeChild(script);
+          resolve(data);
+        };
+
+        script.onerror = function() {
+          delete window[callbackName];
+          try { document.body.removeChild(script); } catch (e) {}
+          // Fallback to standard fetch
+          fetch(url, { method: "GET", redirect: "follow" })
+            .then(r => r.json())
+            .then(resolve)
+            .catch(reject);
+        };
+
+        script.src = url + separator + "callback=" + callbackName;
+        document.body.appendChild(script);
+      });
+    }
+
+    async function queryGoogleSheet(url) {
+      try {
+        const res = await fetch(url, { method: "GET", redirect: "follow" });
+        if (res.ok) {
+          return await res.json();
+        }
+      } catch (err) {}
+      return await fetchSheetJSONP(url);
+    }
+
     document.getElementById("btnLoadCloud").addEventListener("click", async () => {
       const cfg = SECTORS[currentTab];
       try {
-        const res = await fetch(`${GOOGLE_SCRIPT_URL}?tab=${cfg.sheetTab}&all=true`);
-        const data = await res.json();
+        const data = await queryGoogleSheet(`${GOOGLE_SCRIPT_URL}?tab=${encodeURIComponent(cfg.sheetTab)}&all=true`);
         if (!Array.isArray(data) || data.length === 0) {
           alert(`No records exist in '${cfg.sheetTab}'.`);
           return;
@@ -965,7 +1010,6 @@
     document.getElementById("btnModalCancel").addEventListener("click", () => { document.getElementById("stockModal").style.display = "none"; });
     document.getElementById("btnModalClose").addEventListener("click", () => { document.getElementById("stockModal").style.display = "none"; });
 
-    // When User clicks "Import Selected", commit Active = 1 or 0 to Google Sheets and render
     document.getElementById("btnModalImport").addEventListener("click", async () => {
       const cfg = SECTORS[currentTab];
       const updates = [];
@@ -1016,7 +1060,7 @@
     document.getElementById("btnSaveCloud").addEventListener("click", async () => {
       const cfg = SECTORS[currentTab];
       const list = store[currentTab];
-      if (list.length === 0) return alert("No active stocks to save.");
+      if (!list || list.length === 0) return alert("No active stocks to save.");
       try {
         await fetch(GOOGLE_SCRIPT_URL, {
           method: "POST", mode: "no-cors", credentials: "omit",
@@ -1032,12 +1076,10 @@
       } catch (e) { alert("Save failed: " + e); }
     });
 
-    // Cloud fetch for any active sector tab
     async function loadActiveStocksFromCloud(tabKey) {
       const cfg = SECTORS[tabKey];
       try {
-        const res = await fetch(`${GOOGLE_SCRIPT_URL}?tab=${cfg.sheetTab}`);
-        const data = await res.json();
+        const data = await queryGoogleSheet(`${GOOGLE_SCRIPT_URL}?tab=${encodeURIComponent(cfg.sheetTab)}`);
         if (Array.isArray(data)) {
           store[tabKey] = data;
           saveLocalCache();
@@ -1056,11 +1098,10 @@
       themeBtn.innerHTML = next === "light" ? "🌙 Dark Mode" : "☀️ Light Mode";
     });
 
-    // Initial sequence
     loadLocalCache();
-    renderTable();
+    renderLoading();
     checkBridgeStatus();
-    loadActiveStocksFromCloud(currentTab); // Fetches active stocks for Pharma immediately on launch
+    loadActiveStocksFromCloud(currentTab);
   </script>
 </body>
 </html>
